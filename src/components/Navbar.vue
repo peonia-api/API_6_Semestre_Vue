@@ -1,45 +1,54 @@
 <template>
-  <Menubar :model="items">
-      <template #item="{ item, props, hasSubmenu }">
-          <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-              <a v-ripple :href="href" v-bind="props.action" @click="navigate">
-                  <span :class="item.icon" />
-                  <span class="ml-2">{{ item.label }}</span>
-              </a>
-          </router-link>
-          <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-              <span :class="item.icon" />
-              <span class="ml-2">{{ item.label }}</span>
-              <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
-          </a>
-      </template>
-  </Menubar>
+  <nav class="navbar">
+    <img src="./icons/Altave.png" alt="Logo" class="navbar-logo">
+    <ul class="nav-list">
+      <li class="nav-item"><RouterLink to="/teste">PAINEL</RouterLink></li>
+      <li class="nav-item"><RouterLink to="/relatorio">RELATÓRIOS</RouterLink></li>
+      <li class="nav-item"><RouterLink to="/">USUÁRIOS</RouterLink></li>
+    </ul>
+  </nav>
 </template>
-
-<script setup>
-import Menubar from 'primevue/menubar';
-import { ref } from "vue";
-
-const items = ref([
-    {
-        label: 'Home',
-        icon: 'pi pi-home'
-    },
-    {
-        label: 'Features',
-        icon: 'pi pi-star'
-    },
-    {
-        label: 'Projects',
-        icon: 'pi pi-search',
-    },
-        
-    {
-        label: 'Contact',
-        icon: 'pi pi-envelope'
-    }
-]);
-
-</script>
-
-
+  
+  <style>
+  .navbar {
+    background-color: #003654;
+    display: flex;
+    align-items: center;
+    height: 50px;
+  }
+  .navbar-logo{
+    height: 20px;
+    width: 125px;
+    margin-left: 30px;
+  }
+  .nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    margin-left: 100px;
+    align-items: center;
+  }
+  
+  .nav-item {
+    margin-right: 100px;
+  }
+  
+  .nav-item:last-child {
+    margin-right: 0;
+  }
+  
+  .nav-item a {
+    text-decoration: none;
+    color: #FFFF;
+    font-size: small;
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  .nav-item a:hover {
+    background-color: #03517b;
+    border-radius: 10px;
+  }
+  </style>
+  
