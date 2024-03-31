@@ -22,7 +22,7 @@
   text-align: center;
   display: flex;
   align-items: center;
-  height: 130px;
+  padding: 10px 0;
 }
 
 .footer-content {
@@ -30,12 +30,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 90%; /* Largura máxima do conteúdo do footer */
 }
 
 .footer-logo {
   height: 20px;
   width: 125px;
-  margin-right: 200px;
+  margin-right: 20px;
 }
 
 .footer-nav-list {
@@ -46,7 +47,7 @@
 }
 
 .footer-nav-item {
-  margin-right: 200px;
+  margin-right: 10px; 
 }
 
 .footer-nav-item a {
@@ -56,12 +57,12 @@
 }
 
 .footer-nav-item a:hover {
-    background-color: #969696;
-    border-radius: 3px;
+  background-color: #969696;
+  border-radius: 3px;
 }
 
-.footer-text {
-  margin-top: 10px;
-  font-size: 12px;
-}
-</style>
+@media (min-width: 769px) {
+  .footer-nav-item {
+    margin-right: 20px; 
+  }
+}</style>
