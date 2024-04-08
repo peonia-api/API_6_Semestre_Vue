@@ -1,48 +1,147 @@
 <template>
-  <div  class="main-container">
-    <ReportTable :items="tableData" />
+  <div class="outer-container">
+  <div class="titulo-container">
+    <div class="title">
+        <p>Relatório de ocorrências</p>
+    </div>
+    <div class="export-dropdown">
+        <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para PDF" @click="exportTable" class="export-icon">
+    </div>
+  </div>
+    <div class="table-container">
+      <div class="table-header">
+        <div class="table-row">
+          <div class="table-column">Ocorrência</div>
+          <div class="table-column">Data</div>
+          <div class="table-column">Horário</div>
+        </div>
+      </div>
+      <div class="table-body" ref="tableBody">
+        <div v-for="(item, index) in visibleItems" :key="index" class="table-row">
+          <div class="table-column">
+            <i :class="getOccurrenceIconClass(item.direction)"></i>
+          </div>
+          <div class="table-column">{{ item.date }}</div>
+          <div class="table-column">{{ item.time }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <span>{{ currentPage }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">Próxima</button>
+    </div>
   </div>
 </template>
+<script setup>
+import { RegistroStore } from '../stores/index';
+import { onMounted, ref } from 'vue';
 
-<script>
-import ReportTable from '../components/ReportTable.vue';
+const registroRedzone = RegistroStore();
+const data = ref(null);
 
-export default {
-  components: {
-    ReportTable
-  },
-  data() {
-    return {
-      tableData: [
-        { direction: 'direita', date: '01/01/2022', time: '10:00', details: 'Detalhes da ocorrência 1' },
-        { direction: 'esquerda', date: '02/01/2022', time: '11:00', details: 'Detalhes da ocorrência 2' },
-        { direction: 'direita', date: '01/01/2022', time: '10:00', details: 'Detalhes da ocorrência 1' },
-        { direction: 'esquerda', date: '02/01/2022', time: '11:00', details: 'Detalhes da ocorrência 2' },
-        { direction: 'direita', date: '01/01/2022', time: '10:00', details: 'Detalhes da ocorrência 1' },
-        { direction: 'esquerda', date: '02/01/2022', time: '11:00', details: 'Detalhes da ocorrência 2' },
-        { direction: 'direita', date: '01/01/2022', time: '10:00', details: 'Detalhes da ocorrência 1' },
-        { direction: 'esquerda', date: '02/01/2022', time: '11:00', details: 'Detalhes da ocorrência 2' },
-        { direction: 'direita', date: '01/01/2022', time: '10:00', details: 'Detalhes da ocorrência 1' },
-        
-      ]
-    };
-  }
-};
+const pegarDados = async () => {
+    try {
+        data.value = await registroRedzone.pegarHistoricoRedZone();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+onMounted(() => {
+    pegarDados();
+});
 </script>
 
 <style scoped>
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-  }
-  .main-container {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 150px); 
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-  }
-</style>
+.outer-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 50vh;
+  width: 80%; 
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  background-color:#f1f1f1;
+  padding: 10px;
+}
 
+.table-container {
+  background-color:#fafafa;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 230px; 
+}
+
+.table-header {
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.table-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.table-column {
+  flex: 1;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.table-body .table-row:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.pi.pi-arrow-right,
+.pi.pi-arrow-left {
+  font-size: 1.0rem; 
+  margin: 0 5px; 
+  border: 2px solid; 
+  border-radius: 10px; 
+  padding: 5px; 
+}
+
+.pi.pi-arrow-right {
+  color: green; 
+  border-color: green; 
+}
+
+.pi.pi-arrow-left {
+  color: red; 
+  border-color: red; 
+}
+
+.titulo-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold; 
+  margin-left: 40px;
+}
+
+.export-icon {
+  width: 30px; 
+  height: 35px;
+}
+
+.export-dropdown{
+  margin-right: 60px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  margin: 0 5px;
+}
+</style>

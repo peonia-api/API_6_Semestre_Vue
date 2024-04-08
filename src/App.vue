@@ -19,6 +19,10 @@ import Footer from './components/Footer.vue'
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      min-height: calc(100vh - 150px); 
+      width: 100%;
+  
 }
 
 
