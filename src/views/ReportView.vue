@@ -18,12 +18,14 @@
         </div>
       </div>
       <div class="table-body" ref="tableBody">
-          <div v-for="(item, index) in registroRedzone.dados" :key="index" class="table-row" >
-            <div class="table-column">{{ item.occurrence }}</div>
-            <div class="table-column">{{ item.dateTime }}</div>
-            <div class="table-column">{{ item.dateTime }}</div>
-            <div class="table-column">{{ item.room }}</div>
+        <div v-for="(item, index) in registroRedzone.dados" :key="index" class="table-row">
+          <div class="table-column">
+            <i :class="item.occurrence === 'ENTRANDO' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
           </div>
+          <div class="table-column">{{ formatDate(item.dateTime) }}</div>
+          <div class="table-column">{{ formatTime(item.dateTime) }}</div>
+          <div class="table-column">Laboratório</div>
+        </div>
       </div>
     </div>
   </div>
@@ -32,7 +34,7 @@
 <script setup>
 import { RegistroStore } from '../stores/index';
 import { onMounted } from 'vue';
-
+import { format } from 'date-fns';
 const registroRedzone = RegistroStore();
 
 const pegarDados = async () => {
@@ -46,6 +48,17 @@ const pegarDados = async () => {
 onMounted(() => {
   pegarDados();
 });
+
+const formatDate = (dateTime) => {
+  return format(new Date(dateTime), 'dd/MM/yyyy');
+}
+
+
+const formatTime = (dateTime) => {
+  const adiantarHorario = new Date(new Date(dateTime).getTime() + (3 * 60 * 60 * 1000));
+  return format(adiantarHorario, 'HH:mm');
+}
+
 </script>
 
 
