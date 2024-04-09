@@ -1,57 +1,53 @@
 <template>
   <div class="outer-container">
-  <div class="titulo-container">
-    <div class="title">
+    <div class="titulo-container">
+      <div class="title">
         <p>Relatório de ocorrências</p>
-    </div>
-    <div class="export-dropdown">
+      </div>
+      <div class="export-dropdown">
         <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para PDF" @click="exportTable" class="export-icon">
+      </div>
     </div>
-  </div>
     <div class="table-container">
       <div class="table-header">
         <div class="table-row">
           <div class="table-column">Ocorrência</div>
           <div class="table-column">Data</div>
           <div class="table-column">Horário</div>
+          <div class="table-column">Sala</div>
         </div>
       </div>
       <div class="table-body" ref="tableBody">
-        <div v-for="(item, index) in visibleItems" :key="index" class="table-row">
-          <div class="table-column">
-            <i :class="getOccurrenceIconClass(item.direction)"></i>
+          <div v-for="(item, index) in registroRedzone.dados" :key="index" class="table-row" >
+            <div class="table-column">{{ item.occurrence }}</div>
+            <div class="table-column">{{ item.dateTime }}</div>
+            <div class="table-column">{{ item.dateTime }}</div>
+            <div class="table-column">{{ item.room }}</div>
           </div>
-          <div class="table-column">{{ item.date }}</div>
-          <div class="table-column">{{ item.time }}</div>
-        </div>
       </div>
-    </div>
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
-      <span>{{ currentPage }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">Próxima</button>
     </div>
   </div>
 </template>
+
 <script setup>
 import { RegistroStore } from '../stores/index';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 const registroRedzone = RegistroStore();
-const data = ref(null);
 
 const pegarDados = async () => {
-    try {
-        data.value = await registroRedzone.pegarHistoricoRedZone();
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    await registroRedzone.historicRegister();
+  } catch (error) {
+    console.log('Erro ao obter dados:', error);
+  }
 }
 
 onMounted(() => {
-    pegarDados();
+  pegarDados();
 });
 </script>
+
 
 <style scoped>
 .outer-container {

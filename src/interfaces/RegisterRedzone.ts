@@ -5,6 +5,6 @@ interface Registro {
     room: number
 }
 
-export interface RegistroRedzone {
+export interface Register {
     registro: Registro[]
 }
