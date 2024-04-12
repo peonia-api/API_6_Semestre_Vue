@@ -5,7 +5,7 @@
         <p>Relatório de ocorrências</p>
       </div>
       <div class="export-dropdown">
-        <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para PDF" @click="exportTable" class="export-icon">
+        <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
       </div>
     </div>
     <div class="table-container">
@@ -42,6 +42,7 @@
 import { RegistroStore } from '../stores/index';
 import { onMounted, ref, computed } from 'vue';
 import { format } from 'date-fns';
+import * as XLSX from 'xlsx';
 const registroRedzone = RegistroStore();
 
 const pegarDados = async () => {
@@ -77,15 +78,6 @@ const displayedData = computed(() => {
   return formattedData.value.slice(startIndex, endIndex);
 });
 
-const formatDate = (dateTime) => {
-  return format(new Date(dateTime), 'dd/MM/yyyy');
-}
-
-const formatTime = (dateTime) => {
-  const adiantarHorario = new Date(new Date(dateTime).getTime() + (3 * 60 * 60 * 1000));
-  return format(adiantarHorario, 'HH:mm');
-}
-
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
@@ -101,9 +93,24 @@ const nextPage = () => {
 const gotoPage = (pageNumber) => {
   currentPage.value = pageNumber;
 }
+
+const exportToExcel = () => {
+  const worksheet = XLSX.utils.json_to_sheet(formattedData.value.map(item => ({
+    'Ocorrência': item.occurrence,
+    'Hora': item.formattedDate,
+    'Data': item.formattedTime,
+    'Sala': 'Laboratório'
+  })))
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Ocorrências');
+  XLSX.writeFile(workbook, 'relatorio_ocorrencias.xlsx');
+}
+
 </script>
 
-<style scoped>
+<style>
+
 .outer-container {
   display: flex;
   flex-direction: column;
