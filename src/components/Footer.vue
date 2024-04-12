@@ -5,9 +5,9 @@
         <img src="./icons/Altave.png" alt="Logo" class="logo-image">
       </div>
       <ul class="footer-nav-list">
-        <li class="footer-nav-item"><RouterLink to="/sobre">SOBRE</RouterLink></li>
-        <li class="footer-nav-item"><RouterLink to="/contato">CONTATO</RouterLink></li>
-        <li class="footer-nav-item"><RouterLink to="/termos">TERMOS DE SERVIÇO</RouterLink></li>
+        <li class="footer-nav-item"><a href="https://altave.com.br/nossa-historia/" target="_blank">SOBRE</a></li>
+        <li class="footer-nav-item"><a href="https://altave.com.br/contato/" target="_blank">CONTATO</a></li>
+
       </ul>
     </div>
   </footer>
