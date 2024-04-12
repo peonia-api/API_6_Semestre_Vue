@@ -18,14 +18,21 @@
         </div>
       </div>
       <div class="table-body" ref="tableBody">
-        <div v-for="(item, index) in registroRedzone.dados" :key="index" class="table-row">
+        <div v-for="(item, index) in displayedData" :key="index" class="table-row">
           <div class="table-column">
             <i :class="item.occurrence === 'ENTRANDO' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
           </div>
-          <div class="table-column">{{ formatDate(item.dateTime) }}</div>
-          <div class="table-column">{{ formatTime(item.dateTime) }}</div>
+          <div class="table-column">{{ item.formattedDate }}</div>
+          <div class="table-column">{{ item.formattedTime }}</div>
           <div class="table-column">Laboratório</div>
         </div>
+      </div>
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <div class="page-numbers">
+          <button v-for="pageNumber in totalPages" :key="pageNumber" @click="gotoPage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</button>
+        </div>
+        <button @click="nextPage" :disabled="currentPage === totalPages">Próxima</button>
       </div>
     </div>
   </div>
@@ -33,13 +40,14 @@
 
 <script setup>
 import { RegistroStore } from '../stores/index';
-import { onMounted } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { format } from 'date-fns';
 const registroRedzone = RegistroStore();
 
 const pegarDados = async () => {
   try {
     await registroRedzone.historicRegister();
+    data.value = registroRedzone.dados;
   } catch (error) {
     console.log('Erro ao obter dados:', error);
   }
@@ -49,18 +57,51 @@ onMounted(() => {
   pegarDados();
 });
 
+const data = ref([]);
+const currentPage = ref(1);
+const itemsPerPage = 6;
+
+const formattedData = computed(() => {
+  return data.value.map(item => ({
+    ...item,
+    formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
+    formattedTime: format(new Date(item.dateTime), 'HH:mm')
+  }));
+});
+
+const totalPages = computed(() => Math.ceil(formattedData.value.length / itemsPerPage));
+
+const displayedData = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return formattedData.value.slice(startIndex, endIndex);
+});
+
 const formatDate = (dateTime) => {
   return format(new Date(dateTime), 'dd/MM/yyyy');
 }
-
 
 const formatTime = (dateTime) => {
   const adiantarHorario = new Date(new Date(dateTime).getTime() + (3 * 60 * 60 * 1000));
   return format(adiantarHorario, 'HH:mm');
 }
 
-</script>
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+}
 
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+}
+
+const gotoPage = (pageNumber) => {
+  currentPage.value = pageNumber;
+}
+</script>
 
 <style scoped>
 .outer-container {
