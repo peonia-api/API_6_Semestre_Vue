@@ -28,11 +28,11 @@
         </div>
       </div>
       <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+         <Button label="Anterior" severity="contrast"  @click="prevPage" :disabled="currentPage === 1"></Button>
         <div class="page-numbers">
-          <button v-for="pageNumber in totalPages" :key="pageNumber" @click="gotoPage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</button>
+          <Button v-for="pageNumber in totalPages" :key="pageNumber" @click="gotoPage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</Button>
         </div>
-        <button @click="nextPage" :disabled="currentPage === totalPages">Próxima</button>
+        <Button label="Próximo" severity="contrast" @click="nextPage" :disabled="currentPage === totalPages"></Button>
       </div>
     </div>
   </div>
@@ -43,6 +43,8 @@ import { RegistroStore } from '../stores/index';
 import { onMounted, ref, computed } from 'vue';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
+import Button from 'primevue/button';
+
 const registroRedzone = RegistroStore();
 
 const pegarDados = async () => {
@@ -200,5 +202,7 @@ const exportToExcel = () => {
 
 .pagination button {
   margin: 0 5px;
+  background-color: rgba(0, 51, 101, 1);
+  height: 25px;
 }
 </style>
