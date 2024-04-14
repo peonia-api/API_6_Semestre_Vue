@@ -20,7 +20,7 @@
       <div class="table-body" ref="tableBody">
         <div v-for="(item, index) in displayedData" :key="index" class="table-row">
           <div class="table-column">
-            <i :class="item.occurrence === 'ENTRANDO' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
+            <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
           </div>
           <div class="table-column">{{ item.formattedDate }}</div>
           <div class="table-column">{{ item.formattedTime }}</div>
@@ -68,7 +68,7 @@ const formattedData = computed(() => {
   return data.value.map(item => ({
     ...item,
     formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
-    formattedTime: format(new Date(item.dateTime), 'HH:mm')
+    formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
   }));
 });
 
