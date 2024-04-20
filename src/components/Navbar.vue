@@ -6,6 +6,9 @@
     <ul class="nav-list">
       <li class="nav-item"><router-link to="/">RELATÓRIOS</router-link></li>
     </ul>
+    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/userList">USUARIO</router-link></li>
+    </ul>
   </nav>
 </template>
 
@@ -13,7 +16,7 @@
 
 </script>
 
-<style scoped>
+<style>
 .navbar {
   background-color: #003654;
   display: flex;
