@@ -1,13 +1,16 @@
+import UserRegistration from '../views/UserRegistration.vue';
 import UserListing from '../views/UserListing.vue';
 
-const userRoute = {
+export const UserRoute = {
   path: '/userList',
-  name: 'userList',
-  meta: {
-    title: 'userList'
-  },
-  component: UserListing 
-
+  component: UserListing,
 };
 
-export default userRoute;
+export const RegistrationRoute = {
+  path: '/cadastroUser',
+  name: 'cadastroView',
+  meta: {
+    title: 'cadastro'
+  },
+  component: UserRegistration
+};

@@ -6,7 +6,7 @@
             </div>
 
             <div class="export-dropdown">
-                <button class="button-add">ADICIONAR USUÁRIOS</button>
+                <button  @click="goToCadastro" class="button-add">ADICIONAR USUÁRIOS</button>
             </div>
         </div>
         <div class="table">
@@ -37,7 +37,13 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+
+const goToCadastro = () => {
+  router.push({ name: 'cadastroView' });
+};
 </script>
 
 <style>
