@@ -8,7 +8,7 @@
         <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
       </div>
     </div>
-    <div class="table-container">
+    <div class="table">
       <div class="table-header">
         <div class="table-row">
           <div class="table-column">Ocorrência</div>
@@ -27,14 +27,14 @@
           <div class="table-column">Laboratório</div>
         </div>
       </div>
-      <div class="pagination">
+    </div>
+    <div class="pagination">
          <Button label="Anterior" severity="contrast"  @click="prevPage" :disabled="currentPage === 1"></Button>
         <div class="page-numbers">
           <Button v-for="pageNumber in totalPages" :key="pageNumber" @click="gotoPage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</Button>
         </div>
         <Button label="Próximo" severity="contrast" @click="nextPage" :disabled="currentPage === totalPages"></Button>
       </div>
-    </div>
   </div>
 </template>
 
@@ -114,23 +114,23 @@ const exportToExcel = () => {
 <style>
 
 .outer-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 50vh;
-  width: 80%; 
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  background-color:#f1f1f1;
-  padding: 10px;
+    background-color: #f3f3f3;
+    border-radius: 15px;
+    align-items: center;
+    width: 75%;
+    height: 60%;
 }
 
-.table-container {
-  background-color:#fafafa;
-  border-radius: 8px;
-  width: 100%;
-  min-height: 230px; 
+.table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 90%;
+    height: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
+
 
 .table-header {
   font-weight: bold;
@@ -182,7 +182,7 @@ const exportToExcel = () => {
 .title {
   font-size: 24px;
   font-weight: bold; 
-  margin-left: 40px;
+  margin-left: 30px;
 }
 
 .export-icon {
