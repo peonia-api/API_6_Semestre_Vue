@@ -1,16 +1,21 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import ReportView from '../views/ReportView.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import RegisterRoute from './RegisterRoute'
+import UserRoute from "./UserRoute";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {
-      path: '/',
-      name: 'reportView',
-      component: ReportView
-    },
-  
-  ]
-})
+    RegisterRoute,
+    UserRoute
+  ],
 
-export default router
+
+  scrollBehavior() {
+    return { top:0 };
+  }
+
+  
+});
+
+
+export default router;
