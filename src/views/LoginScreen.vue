@@ -25,7 +25,7 @@
      </div>
 
      <div class="acessar">
-       <Button label="Acessar" severity="contrast" rounded ></Button>
+       <Button  @click="goToUserList" label="Acessar" severity="contrast" rounded ></Button>
      </div>
     </UserBox>
   </v-app>
@@ -38,9 +38,16 @@ import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import UserBox from '@/components/UserBox.vue';
 import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const passwordValue = ref('');
 const showPassword = ref(false);
+
+const goToUserList = () => {
+  router.push("/userList")
+}
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
@@ -48,13 +55,17 @@ const togglePasswordVisibility = () => {
 </script>
 
 <style scoped>
-
-
 .content {
   display: flex;
+  position: absolute;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 51, 101, 1);
 }
 
 .AltaveIcon {
