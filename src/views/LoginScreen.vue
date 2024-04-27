@@ -1,6 +1,5 @@
 <template>
 <div class="content"> 
-  <v-app class="page-background-color">
     <UserBox background_color="gray_color">
       <div class="AltaveIcon">
         <img src="@/assets/icons/Altave_Photoroom.png" />
@@ -28,7 +27,6 @@
        <Button  @click="goToUserList" label="Acessar" severity="contrast" rounded ></Button>
      </div>
     </UserBox>
-  </v-app>
 </div>  
    
 </template>
@@ -61,11 +59,11 @@ const togglePasswordVisibility = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   top: 0;
   left: 0;
   z-index: 1000;
-  background-color: rgba(0, 51, 101, 1);
+  background-color: rgba(0, 51, 101, 1); 
 }
 
 .AltaveIcon {

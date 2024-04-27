@@ -34,7 +34,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 500px);
+    width: 80%;
+    max-width: 700x;
   }
 
 .blue_color {
@@ -51,7 +53,8 @@ export default {
     height: 440px;
     display: flex;
     flex-direction: column; 
-    align-items: center; 
+    align-items: center;
+    justify-content: center; 
     padding-top: 40px; 
   }
 </style>
