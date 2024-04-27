@@ -42,7 +42,7 @@ export default {
 }
 
 .gray_color {
-  background-color: red;
+  background-color: rgba(221, 222, 221, 1);
 }
 
 

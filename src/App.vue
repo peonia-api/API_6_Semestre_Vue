@@ -1,20 +1,25 @@
 <template>
   <v-app>
-
-    <Navbar />
-      <div class="container">
-        <RouterView class="router-view-container" />
-      </div>
-    <Footer />
+    <!-- Renderiza Navbar e Footer apenas se não estiver na rota de login -->
+    <Navbar v-if="shouldRenderNavbar" />
+    <div class="container">
+      <RouterView class="router-view-container" />
+    </div>
+    <Footer v-if="shouldRenderFooter" />
   </v-app>
 </template>
 
 <script setup>
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import Navbar from './components/Navbar.vue';
 import Footer from './components/Footer.vue';
-</script>
 
+const route = useRoute();
+const isLoginRoute = route.name === 'LoginRoute';
+
+const shouldRenderNavbar = !isLoginRoute;
+const shouldRenderFooter = !isLoginRoute;
+</script>
 
 <style>
   .container {
@@ -24,5 +29,4 @@ import Footer from './components/Footer.vue';
     align-items: center;
     margin-top: -8vh;
   }
-
 </style>
