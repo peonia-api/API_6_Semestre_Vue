@@ -38,14 +38,18 @@ import { RegistroStore } from '../stores/index';
 import { onMounted, ref, computed } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
-import { provide } from 'vue';
-
 
 const registroRedzone = RegistroStore();
 
 const data = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = ref(6);
+
+const props = defineProps({
+  itemsPerPage: {
+    type: Number,
+    default: 6
+  }
+});
 
 const pegarDados = async () => {
   try {
@@ -56,9 +60,9 @@ const pegarDados = async () => {
   }
 }
 
+
 onMounted(() => {
   pegarDados();
-  provide('formattedData', formattedData);
 });
 
 const formattedData = computed(() => {
@@ -69,11 +73,11 @@ const formattedData = computed(() => {
   }));
 });
 
-const totalPages = computed(() => Math.ceil(formattedData.value.length / itemsPerPage));
+const totalPages = computed(() => Math.ceil(formattedData.value.length / props.itemsPerPage));
 
 const displayedData = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const startIndex = (currentPage.value - 1) * props.itemsPerPage;
+  const endIndex = startIndex + props.itemsPerPage;
   return formattedData.value.slice(startIndex, endIndex);
 });
 
@@ -153,7 +157,24 @@ const nextPage = () => {
     margin-right: 20px;
 }
 
+.pi.pi-arrow-right,
+.pi.pi-arrow-left {
+  font-size: 1.0rem; 
+  margin: 0 5px; 
+  border: 2px solid; 
+  border-radius: 10px; 
+  padding: 5px; 
+}
 
+.pi.pi-arrow-right {
+  color: green; 
+  border-color: green; 
+}
+
+.pi.pi-arrow-left {
+  color: red; 
+  border-color: red; 
+}
 .pagination-painel{
     display: flex;
     justify-content: center;

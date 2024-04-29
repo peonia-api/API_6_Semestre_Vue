@@ -8,17 +8,16 @@
     </div>
 
     <div class="table-container">
-      <TableReports></TableReports>
+      <TableReports :items-per-page="6"></TableReports>
     </div>
   </div>
-
 </template>
 
 <script setup="ts">
-import { inject } from 'vue'; 
+
 import TableReports from '../components/TableReports.vue'
 
-const formattedData = inject('formattedData'); 
+
 
 const exportToExcel = () => {
   const worksheet = XLSX.utils.json_to_sheet(formattedData.value.map(item => ({
