@@ -1,41 +1,37 @@
 <template>
-
-        <div class="table">
-            <div class="table-header">
-                <div class="table-row">
-                    <div class="table-column">Ocorrência</div>
-                    <div class="table-column">Data</div>
-                    <div class="table-column">Horário</div>
-                    <div class="table-column">Sala</div>
-                </div>
-            </div>
-            <div v-for="(item, index) in displayedData" :key="index" class="table-row">
-                    <div class="table-column">
-                        <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
-                    </div>
-                    <div class="table-column">{{ item.formattedDate }}</div>
-                    <div class="table-column">{{ item.formattedTime }}</div>
-                    <div class="table-column">Laboratório</div>
-                </div>
-        </div>
-
-        <div class="pagination-painel">
-          <div>
-              <Button class="button-pagination-painel" @click="prevPage"><p>ANTERIOR</p></Button>
-          </div>
-
-          <div><p class="page-number">{{ currentPage }}</p></div>
-
-          <div>
-              <Button class="button-pagination-painel" @click="nextPage"><p>PRÓXIMO</p></Button>
-          </div>
+  <div class="table">
+    <div class="table-header">
+      <div class="table-row">
+        <div class="table-column">Ocorrência</div>
+        <div class="table-column">Data</div>
+        <div class="table-column">Horário</div>
+        <div class="table-column">Sala</div>
       </div>
+    </div>
+    <div v-for="(item, index) in displayedData" :key="index" class="table-row">
+      <div class="table-column">
+        <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
+      </div>
+      <div class="table-column">{{ item.formattedDate }}</div>
+      <div class="table-column">{{ item.formattedTime }}</div>
+      <div class="table-column">Laboratório</div>
+    </div>
+  </div>
 
+  <div class="pagination-painel">
+    <div>
+      <Button class="button-pagination-painel" @click="prevPage"><p>ANTERIOR</p></Button>
+    </div>
+    <div><p class="page-number">{{ currentPage }}</p></div>
+    <div>
+      <Button class="button-pagination-painel" @click="nextPage"><p>PRÓXIMO</p></Button>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { RegistroStore } from '../stores/index';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
 
@@ -59,7 +55,6 @@ const pegarDados = async () => {
     console.log('Erro ao obter dados:', error);
   }
 }
-
 
 onMounted(() => {
   pegarDados();
@@ -92,7 +87,16 @@ const nextPage = () => {
     currentPage.value++;
   }
 }
+
+watch(formattedData, (newFormattedData) => {
+  if (newFormattedData.length > 0) {
+    localStorage.setItem('formattedData', JSON.stringify(newFormattedData));
+  }
+});
 </script>
+
+
+
 
 
 <style>

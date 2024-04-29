@@ -13,25 +13,28 @@
   </div>
 </template>
 
-<script setup="ts">
-
-import TableReports from '../components/TableReports.vue'
-
-
+<script setup>
+import TableReports from '../components/TableReports.vue';
+import * as XLSX from 'xlsx';
 
 const exportToExcel = () => {
-  const worksheet = XLSX.utils.json_to_sheet(formattedData.value.map(item => ({
-    'Ocorrência': item.occurrence,
-    'Hora': item.formattedDate,
-    'Data': item.formattedTime,
-    'Sala': 'Laboratório'
-  })))
+  const formattedData = JSON.parse(localStorage.getItem('formattedData'));
 
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Ocorrências');
-  XLSX.writeFile(workbook, 'relatorio_ocorrencias.xlsx');
+  if (formattedData) {
+    const worksheet = XLSX.utils.json_to_sheet(formattedData.map(item => ({
+      'Ocorrência': item.occurrence,
+      'Hora': item.formattedDate,
+      'Data': item.formattedTime,
+      'Sala': 'Laboratório'
+    })));
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Ocorrências');
+    XLSX.writeFile(workbook, 'relatorio_ocorrencias.xlsx');
+  } else {
+    console.log('Não há dados formatados no localStorage.');
+  }
 }
-
 </script>
 
 
