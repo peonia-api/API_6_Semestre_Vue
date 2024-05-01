@@ -1,6 +1,6 @@
 <template>
   <div class="title-ocorrencias">
-    <p>Listegem de Usuario</p>
+    <p>Listagem de Usuario</p>
   </div>
   <div class="outer-container">
     <div class="export-dropdown">

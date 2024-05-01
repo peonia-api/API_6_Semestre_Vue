@@ -9,6 +9,10 @@
     <ul class="nav-list">
       <li class="nav-item"><router-link to="/userList">USUARIO</router-link></li>
     </ul>
+
+    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
+    </ul>
   </nav>
 </template>
 

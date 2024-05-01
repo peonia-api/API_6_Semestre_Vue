@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import RegisterRoute from './RegisterRoute';
-import { UserRoute, RegistrationRoute } from "./UserRoute";
+import { UserRoute, RegistrationRoute, PerfilRoute } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
 
@@ -10,7 +10,8 @@ const router = createRouter({
     LoginRoute,
     RegisterRoute,
     UserRoute,
-    RegistrationRoute
+    RegistrationRoute,
+    PerfilRoute
   ],
   scrollBehavior() {
     return { top: 0 };
