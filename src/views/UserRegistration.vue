@@ -51,11 +51,10 @@ const submitForm = async () => {
   } catch (error) {
     console.log(error);
   } finally {
-    router.push("/");
+    router.push("/userList");
   }
 };
 </script>
-
 
 <style scoped>
 .send-image {

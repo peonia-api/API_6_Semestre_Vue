@@ -34,7 +34,9 @@ export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuari
         return response;
     } catch (error) {
         throw new Error((error as AxiosError).message || 'Erro ao criar usuário');
-        
+    }
+}
+
 export const getCurrentUser = async (): Promise<Usuario> => {
     const token = localStorage.getItem('token');
 
@@ -52,4 +54,4 @@ export const getCurrentUser = async (): Promise<Usuario> => {
     } catch (error) {
         throw (error as AxiosError);
     }
-};
+}

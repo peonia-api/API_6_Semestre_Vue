@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getCurrentUser, getUser } from "../utils/services/axiosUser";
+import { createUser, getCurrentUser, getUser } from "../utils/services/axiosUser";
 import type { Usuario } from "@/interfaces/User";
 import { ref } from "vue";
 
