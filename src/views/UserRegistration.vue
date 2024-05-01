@@ -1,5 +1,5 @@
 <template>
-  <UserBox>
+  <UserBox background_color="blue_color">
       <div class="send-image">
         <img src="@/assets/icons/Avatar_Icon.png" alt="Inserir foto de perfil" />
       </div>

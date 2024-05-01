@@ -1,6 +1,5 @@
 <template>
   <v-app>
-
     <Navbar />
     <div class="content-container">
         <RouterView />
@@ -10,9 +9,26 @@
 </template>
 
 <script setup>
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import Navbar from './components/Navbar.vue';
 import Footer from './components/Footer.vue';
+import { ref, watch } from 'vue';
+
+const route = useRoute();
+
+const state = ref({
+  isLoginScreen: false,
+})
+
+watch(
+  () => route.name, 
+  (newRoute, oldRoute) => {
+    console.log({newRoute, oldRoute})
+    state.value.isLoginScreen = newRoute == 'loginScreenVue';
+  }
+);
+
+
 </script>
 
 
