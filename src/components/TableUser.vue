@@ -1,50 +1,69 @@
 <template>
-    <div class="table-container">
-        <div class="titulo-container">
-            <div class="title">
-                <p>Listagem de Usuários</p>
-            </div>
-
-            <div class="export-dropdown">
-                <button  @click="goToCadastro" class="button-add">ADICIONAR USUÁRIOS</button>
-            </div>
-        </div>
-        <div class="table">
-            <div class="table-header">
-                <div class="table-row">
-                    <div class="table-column">Nome</div>
-                    <div class="table-column">Sobrenome</div>
-                    <div class="table-column">Usuário</div>
-                    <div class="table-column">Função</div>
-                </div>
-            </div>
-            <div class="table-body" ref="tableBody">
-                <div class="table-row">
-                    <div class="table-column">Teste</div>
-                    <div class="table-column">Teste</div>
-                    <div class="table-column">Teste</div>
-                    <div class="table-column">Laboratório</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="pagination">
-            <Button class="button-previous">ANTERIOR</Button>
-            <Button class="button-next">PRÓXIMO</Button>
-        </div>
-
+  <div class="table-container">
+    <div class="titulo-container">
+      <div class="title">
+        <p>Listagem de Usuários</p>
+      </div>
+      <div class="export-dropdown">
+        <button @click="goToCadastro" class="button-add">ADICIONAR USUÁRIOS</button>
+      </div>
     </div>
+    <div class="table">
+      <div class="table-header">
+        <div class="table-row">
+          <div class="table-column">Nome</div>
+          <div class="table-column">Sobrenome</div>
+          <div class="table-column">Usuário</div>
+          <div class="table-column">Função</div>
+        </div>
+      </div>
+      <div class="table-body" ref="tableBody">
+        <div class="table-row" v-for="user in registroUser.users" :key="user.id">
+          <div class="table-column">{{ user.name }}</div>
+          <div class="table-column">{{ user.surname }}</div>
+          <div class="table-column">{{ user.email }}</div>
+          <div class="table-column">{{ user.function }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <button class="button-previous">ANTERIOR</button>
+      <button class="button-next">PRÓXIMO</button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import UsuarioStore from '../stores/Usuario';
+import type { Usuario } from "../interfaces/User";
+const registroUser = UsuarioStore();
 const router = useRouter();
+
+const usersDados: Ref<Usuario[]> = ref([]);
 
 const goToCadastro = () => {
   router.push({ name: 'cadastroView' });
 };
+
+const fetchUsers = async () => {
+  try {
+    await registroUser.getAllUsers();
+    console.log(registroUser.users);
+    
+    usersDados.value = registroUser.users; 
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
+
 </script>
+
 
 <style>
 .table-container {
