@@ -52,7 +52,7 @@ const togglePasswordVisibility = () => {
 const handleLogin = async () => {
   try {
     await login(userValue.value, passwordValue.value);
-    router.push("/userList")
+    router.push("/")
   } catch (error) {
     console.error('Erro ao fazer login:', error);
   }

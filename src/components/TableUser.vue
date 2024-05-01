@@ -15,7 +15,7 @@
       <div class="table-column">{{ user.email }}</div>
       <div class="table-column">{{ user.function }}</div>
       <div class="table-column">
-        <span class="pi pi-times delete-icon"></span>
+        <span class="pi pi-times delete-icon" @click="deleteUsers(user.id)"></span>
         <span class="edit-icon"> <img src="../assets/icons/iconEdit.png" /></span>
       </div>
     </div>
@@ -80,6 +80,15 @@ const prevPage = () => {
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
+  }
+}
+
+const deleteUsers = async (userId: string) => {
+  try {
+    console.log(userId);
+    await registroUser.deleteUsuario(userId);
+  } catch (error) {
+    console.error('Erro ao excluir usuário:', error);
   }
 }
 </script>

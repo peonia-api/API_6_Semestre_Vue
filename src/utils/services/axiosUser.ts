@@ -7,6 +7,8 @@ const api = axios.create({
     baseURL: 'http://localhost:8080/user'
 });
 
+
+
 export const getUser = async (route: string, query: RequestParams<unknown> | null = null, apiUse = api): AxiosPromise => {
     try {
         const response = await api.get<{ usuario: Usuario[] }>(route, {
@@ -19,7 +21,9 @@ export const getUser = async (route: string, query: RequestParams<unknown> | nul
 };
 
 export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuario>> => {
+    
     try {
+
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -38,13 +42,13 @@ export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuari
 }
 
 export const getCurrentUser = async (): Promise<Usuario> => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        throw new Error('Token não encontrado.');
-    }
-
     try {
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+
         const response = await api.get<{ usuario: Usuario }>(`/current-user`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -55,3 +59,24 @@ export const getCurrentUser = async (): Promise<Usuario> => {
         throw (error as AxiosError);
     }
 }
+
+
+export const deleteUser = async (userId: string): Promise<void> => {
+    try {
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+        const response = await api.delete(`/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error('Erro ao excluir usuário');
+        }
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao excluir usuário');
+    }
+};

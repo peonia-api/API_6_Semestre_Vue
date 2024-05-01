@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { createUser, getCurrentUser, getUser } from "../utils/services/axiosUser";
+import { createUser, deleteUser, getCurrentUser, getUser } from "../utils/services/axiosUser";
 import type { Usuario } from "@/interfaces/User";
 import { ref } from "vue";
 
@@ -35,10 +35,21 @@ const UsuarioStore = defineStore('usuario', () => {
         }
     }
 
+    const deleteUsuario = async (userId: string) => {
+        try {
+            await deleteUser(userId);
+            await getAllUsers();
+        } catch (error) {
+            console.error('Erro ao deletar usuário:', error);
+            throw error;
+        }
+    };
+      
     return {
         users,
         getAllUsers,
         fetchCurrentUser,
+        deleteUsuario,
         create
     };
 });
