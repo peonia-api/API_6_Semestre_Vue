@@ -1,11 +1,10 @@
 <template>
   <v-app>
-    <!-- Renderiza Navbar e Footer apenas se não estiver na rota de login -->
-    <Navbar v-if="!state.isLoginScreen" />
-    <div class="container">
-      <RouterView class="router-view-container" />
-    </div>
-    <Footer v-if="!state.isLoginScreen" />
+    <Navbar />
+    <div class="content-container">
+        <RouterView />
+      </div>
+    <Footer />
   </v-app>
 </template>
 
@@ -32,12 +31,15 @@ watch(
 
 </script>
 
-<style>
-  .container {
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: -8vh;
-  }
+
+<style scoped>
+.content-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: calc(100vh - 150px); 
+      width: 100%;
+  
+}
 </style>
