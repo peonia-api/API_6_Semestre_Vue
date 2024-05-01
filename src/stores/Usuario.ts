@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getUser } from "../utils/services/axiosUser";
+import { createUser, getUser } from "../utils/services/axiosUser";
 import type { Usuario } from "@/interfaces/User";
 import { ref } from "vue";
 
@@ -14,10 +14,22 @@ const UsuarioStore = defineStore('usuario', () => {
             console.error('Erro ao buscar usuários:', error);
         }
     }
-  
+
+    const create = async (usuario: Usuario) => {
+        try {
+            const res = await createUser(usuario);
+            users.value.unshift(res.data);
+            await getAllUsers();
+        } catch (error) {
+            console.error('Erro ao criar usuário:', error);
+            throw error;
+        }
+    }
+
     return {
         users,
-        getAllUsers
+        getAllUsers,
+        create
     };
 });
 

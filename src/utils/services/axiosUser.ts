@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import type { AxiosPromise } from "axios";
+import type { AxiosPromise, AxiosResponse } from "axios";
 import type RequestParams from "../../interfaces/RequestParams";
 import type { Usuario } from "@/interfaces/User";
 
@@ -18,4 +18,21 @@ export const getUser = async (route: string, query: RequestParams<unknown> | nul
     }
 };
 
-  
+export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuario>> => {
+    try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token de autenticação não encontrado');
+        }
+
+        const response = await api.post<Usuario>('', usuario, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        return response;
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao criar usuário');
+    }
+};
