@@ -2,8 +2,8 @@
   <v-app>
 
     <Navbar />
-      <div class="container">
-        <RouterView class="router-view-container" />
+    <div class="content-container">
+        <RouterView />
       </div>
     <Footer />
   </v-app>
@@ -16,13 +16,14 @@ import Footer from './components/Footer.vue';
 </script>
 
 
-<style>
-  .container {
-    height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: -8vh;
-  }
-
+<style scoped>
+.content-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: calc(100vh - 150px); 
+      width: 100%;
+  
+}
 </style>
