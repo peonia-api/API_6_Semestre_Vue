@@ -22,9 +22,9 @@ const exportToExcel = () => {
 
   if (formattedData) {
     const worksheet = XLSX.utils.json_to_sheet(formattedData.map(item => ({
-      'Ocorrência': item.occurrence,
-      'Hora': item.formattedDate,
-      'Data': item.formattedTime,
+      'Ocorrência': item.occurrence === '0' ? 'saída' : 'entrada',
+      'Data': item.formattedDate,
+      'Hora': item.formattedTime,
       'Sala': 'Laboratório'
     })));
 
