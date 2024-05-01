@@ -4,7 +4,7 @@
       <div class="table-row">
         <div class="table-column">Nome</div>
         <div class="table-column">Sobrenome</div>
-        <div class="table-column">Usuário</div>
+        <div class="table-column">E-mail</div>
         <div class="table-column">Função</div>
         <div class="table-column">Ações</div>
       </div>

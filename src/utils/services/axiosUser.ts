@@ -34,5 +34,22 @@ export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuari
         return response;
     } catch (error) {
         throw new Error((error as AxiosError).message || 'Erro ao criar usuário');
+        
+export const getCurrentUser = async (): Promise<Usuario> => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        throw new Error('Token não encontrado.');
+    }
+
+    try {
+        const response = await api.get<{ usuario: Usuario }>(`/current-user`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.usuario;
+    } catch (error) {
+        throw (error as AxiosError);
     }
 };
