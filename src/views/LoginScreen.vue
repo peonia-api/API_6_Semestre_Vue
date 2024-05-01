@@ -1,5 +1,5 @@
 <template>
-<div class="content"> 
+  <div class="content"> 
     <UserBox background_color="gray_color">
       <div class="AltaveIcon">
         <img src="@/assets/icons/Altave_Photoroom.png" />
@@ -10,25 +10,22 @@
         </div>
       </div> 
 
-     <div class="password-input">
+      <div class="password-input">
         <InputText
-        v-model="passwordValue" :type="showPassword ? 'text' : 'password'"
-        placeholder="Senha"
-        class="password-input"
-       ></InputText>
+          v-model="passwordValue" :type="showPassword ? 'text' : 'password'"
+          placeholder="Senha" class="password-input"
+        ></InputText>
 
-       <i class="pi" :class="showPassword ? 'pi-eye' : 'pi-eye-slash'"
-       @click="togglePasswordVisibility"
-       style="cursor: pointer;"
-       ></i>
-     </div>
+        <i class="pi" :class="showPassword ? 'pi-eye' : 'pi-eye-slash'"
+           @click="togglePasswordVisibility"
+           style="cursor: pointer;"></i>
+      </div>
 
-     <div class="acessar">
-       <Button  @click="goToUserList" label="Acessar" severity="contrast" rounded ></Button>
-     </div>
+      <div class="acessar">
+        <Button label="Acessar" severity="contrast" rounded @click="handleLogin"></Button>
+      </div>
     </UserBox>
-</div>  
-   
+  </div>
 </template>
 
 <script setup>
@@ -36,21 +33,33 @@ import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
 import UserBox from '@/components/UserBox.vue';
 import Button from 'primevue/button';
+
+import { useAuthStore } from '../stores/Login.ts';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
 
+const userValue = ref('');
 const passwordValue = ref('');
 const showPassword = ref(false);
 
-const goToUserList = () => {
-  router.push("/userList")
-}
+const { login } = useAuthStore();
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
+
+const handleLogin = async () => {
+  try {
+    await login(userValue.value, passwordValue.value);
+    router.push("/userList")
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+  }
+};
 </script>
+
+
 
 <style scoped>
 .content {

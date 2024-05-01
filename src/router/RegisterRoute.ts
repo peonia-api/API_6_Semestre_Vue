@@ -4,6 +4,7 @@ const RegisterRoute = {
   path: '/',
   name: 'reportView',
   meta: {
+    requiresAuth: true,
     title: 'user'
   },
  component: ReportView

@@ -1,7 +1,7 @@
 import LoginScreen from '../views/LoginScreen.vue';
 
 const LoginRoute = {
-  path: '/loginScreen',
+  path: '/login',
   name: 'loginScreenVue',
   meta: {
     title: 'login'
