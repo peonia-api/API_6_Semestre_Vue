@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="Register-Button">
-      <Button label="Editar" severity="contrast" @click="submitForm"></Button>
+      <Button label="Editar" severity="contrast" @click="submitPutForm"></Button>
     </div>
   </UserBox>
 </template>
@@ -32,7 +32,7 @@ import { ref, onMounted } from 'vue';
 import UsuarioStore from '../stores/Usuario.ts';
 
 const router = useRouter();
-const { findByIdUser, create } = UsuarioStore();
+const { findByIdUser, putUser } = UsuarioStore();
 const route = useRoute();
 
 const userId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
@@ -42,25 +42,23 @@ const userData = ref({
   surname: '',
   email: '',
   function: '',
-  password: ''
+  password: '',
+  authorizations: [{ name: 'ROLE_ADMIN' }] 
 });
 
 async function getUser() {
   try {
     const response = await findByIdUser(userId);
-    userData.value.name = response.name;
-    userData.value.surname = response.surname;
-    userData.value.email = response.email;
-    userData.value.function = response.function;
+    userData.value = { ...response }; 
     console.log('Sucesso ao buscar informações do usuário!');
   } catch (error) {
     console.log('Erro ao buscar informações do usuário:', error);
   }
 }
 
-const submitForm = async () => {
+const submitPutForm = async () => {
   try {
-    await create(userData.value);
+    await putUser(userId, userData.value);
     router.push("/userList");
   } catch (error) {
     console.error('Erro ao editar usuário:', error);

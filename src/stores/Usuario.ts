@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { createUser, deleteUser, getCurrentUser, getUser, getUserbyId } from "../utils/services/axiosUser";
+import { createUser, deleteUser, getCurrentUser, getUser, getUserbyId, putUserbyId } from "../utils/services/axiosUser";
 import type { Usuario } from "@/interfaces/User";
 import { ref } from "vue";
 
@@ -54,12 +54,23 @@ const UsuarioStore = defineStore('usuario', () => {
             throw error;
         }
     };
+
+    const putUser = async (userId: string, userData: Usuario) => {
+        try {
+            const res = await putUserbyId(userId, userData); 
+            return res.data; 
+        } catch (error) {
+            console.error('Erro ao atualizar usuário por ID:', error);
+            throw error;
+        }
+    };
     return {
         users,
         getAllUsers,
         fetchCurrentUser,
         deleteUsuario,
         findByIdUser,
+        putUser,
         create
     };
 });

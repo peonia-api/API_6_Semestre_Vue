@@ -101,3 +101,25 @@ export const getUserbyId = async (userId: string) => {
         throw new Error((error as AxiosError).message || 'Erro ao obter usuário por ID');
     }
 }
+
+
+export const putUserbyId = async (userId: string, userData: Usuario) => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+        const response = await api.put(`/${userId}`, userData, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error('Erro ao obter usuário por ID');
+        }
+
+        return response.data; 
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao obter usuário por ID');
+    }
+}
