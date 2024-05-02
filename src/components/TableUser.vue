@@ -16,7 +16,7 @@
       <div class="table-column">{{ user.function }}</div>
       <div class="table-column">
         <span class="pi pi-times delete-icon" @click="deleteUsers(user.id)"></span>
-        <span class="edit-icon"> <img src="../assets/icons/iconEdit.png" /></span>
+        <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png" @click="router.push(`/editUser/${user.id}`)"/> </span>
       </div>
     </div>
   </div>
@@ -44,7 +44,9 @@ import UsuarioStore from '../stores/Usuario';
 import type { Usuario } from "../interfaces/User";
 
 import 'primeicons/primeicons.css'
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const registroUser = UsuarioStore();
 const usersDados = ref<Usuario[]>([]);
 const currentPage = ref(1);

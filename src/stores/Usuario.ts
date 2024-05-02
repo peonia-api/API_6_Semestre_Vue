@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { createUser, deleteUser, getCurrentUser, getUser } from "../utils/services/axiosUser";
+import { createUser, deleteUser, getCurrentUser, getUser, getUserbyId } from "../utils/services/axiosUser";
 import type { Usuario } from "@/interfaces/User";
 import { ref } from "vue";
 
@@ -45,11 +45,21 @@ const UsuarioStore = defineStore('usuario', () => {
         }
     };
       
+    const findByIdUser = async (userId: string) => {
+        try {
+            const res = await getUserbyId(userId);
+            return res;   
+        } catch (error) {
+            console.error('Erro ao buscar usuário por ID:', error);
+            throw error;
+        }
+    };
     return {
         users,
         getAllUsers,
         fetchCurrentUser,
         deleteUsuario,
+        findByIdUser,
         create
     };
 });

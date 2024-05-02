@@ -80,3 +80,24 @@ export const deleteUser = async (userId: string): Promise<void> => {
         throw new Error((error as AxiosError).message || 'Erro ao excluir usuário');
     }
 };
+
+export const getUserbyId = async (userId: string) => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+        const response = await api.get(`/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error('Erro ao obter usuário por ID');
+        }
+
+        return response.data; 
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao obter usuário por ID');
+    }
+}
