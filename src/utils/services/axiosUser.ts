@@ -11,7 +11,15 @@ const api = axios.create({
 
 export const getUser = async (route: string, query: RequestParams<unknown> | null = null, apiUse = api): AxiosPromise => {
     try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token de autenticação não encontrado');
+        }
         const response = await api.get<{ usuario: Usuario[] }>(route, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            },
             params: { ...query }
         });
         return response;

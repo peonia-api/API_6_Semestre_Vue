@@ -1,7 +1,8 @@
 import ReportView from '../views/ReportView.vue';
+import PainelView from '../views/PainelView.vue';
 
-const RegisterRoute = {
-  path: '/',
+export const RegisterRoute = {
+  path: '/report',
   name: 'reportView',
   meta: {
     requiresAuth: true,
@@ -10,4 +11,12 @@ const RegisterRoute = {
  component: ReportView
 };
 
-export default RegisterRoute
+
+export const PainelRoute = {
+  path: '/',
+  name: 'painelView',
+  meta: { requiresAuth: true },
+  component: PainelView
+};
+
+

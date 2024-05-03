@@ -1,10 +1,10 @@
 <template>
   <div class="title-ocorrencias">
-    <p>Listagem de Usuario</p>
+    <p>Listagem de Usuário</p>
   </div>
   <div class="outer-container">
     <div class="export-dropdown">
-      <button @click="goToCadastro" class="button-add">ADICIONAR USUÁRIOS</button>
+      <button @click="goToCadastro" class="button-add">ADICIONAR USUÁRIO</button>
     </div>
 
     <div class="table-container">

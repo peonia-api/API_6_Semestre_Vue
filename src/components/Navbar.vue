@@ -5,14 +5,12 @@
     </div>
     <ul class="nav-list">
       <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
-      <li class="nav-item"><router-link to="/relatorio">RELATÓRIOS</router-link></li>
-    </ul>
-    <ul class="nav-list">
-      <li class="nav-item"><router-link to="/userList">USUARIO</router-link></li>
-    </ul>
-
-    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/report">RELATÓRIOS</router-link></li>
+      <li class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
       <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
+    </ul>
+    <ul class="nav-list-button">
+      <li class="nav-item"><Button class="button-logout" @click="nextPage"><p>SAIR</p></Button></li>
     </ul>
   </nav>
 </template>
@@ -27,7 +25,7 @@
   display: flex;
   align-items: center;
   height: 50px;
-  padding: 0 20px; 
+  padding: 0 20px;
 }
 
 .navbar-brand {
@@ -45,7 +43,15 @@
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: end;
+}
+.nav-list-button {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .nav-item {
@@ -63,4 +69,30 @@
 .nav-item a:hover {
   background-color: #03517b;
   border-radius: 10px;
-}</style>
+}
+
+.button-logout {
+    width: 60px; 
+    height: 25px;
+    background-color: #02314b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px; 
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #fafafa;
+}
+
+.button-logout p {
+  text-decoration: none;
+  color: #fafafa;
+  font-size: small;
+  font-weight: 700;
+  padding: 10px;
+}
+.button-logout:hover {
+  background-color: #034163;
+}
+</style>
