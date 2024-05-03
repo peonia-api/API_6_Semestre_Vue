@@ -1,24 +1,31 @@
 <template>
-  <div class="content"> 
+  <div class="content">
     <UserBox background_color="gray_color">
       <div class="AltaveIcon">
         <img src="@/assets/icons/Altave_Photoroom.png" />
       </div>
       <div class="Input-Texts">
         <div class="input-container">
+          <div v-if="usernameError" class="error-message" style="color: red;">{{ usernameError }}</div>
           <InputText type="text" v-model="userValue" placeholder="Usuário" />
         </div>
-      </div> 
+      </div>
 
       <div class="password-input">
         <InputText
-          v-model="passwordValue" :type="showPassword ? 'text' : 'password'"
-          placeholder="Senha" class="password-input"
-        ></InputText>
+          v-model="passwordValue"
+          :type="showPassword ? 'text' : 'password'"
+          placeholder="Senha"
+          class="password-input"
+        />
+        <div v-if="passwordError" class="error-message">{{ passwordError }}</div>
 
-        <i class="pi" :class="showPassword ? 'pi-eye' : 'pi-eye-slash'"
-           @click="togglePasswordVisibility"
-           style="cursor: pointer;"></i>
+        <i
+          class="pi"
+          :class="showPassword ? 'pi-eye' : 'pi-eye-slash'"
+          @click="togglePasswordVisibility"
+          style="cursor: pointer;"
+        ></i>
       </div>
 
       <div class="acessar">
@@ -42,6 +49,10 @@ const router = useRouter()
 const userValue = ref('');
 const passwordValue = ref('');
 const showPassword = ref(false);
+const usernameError = ref('');
+const passwordError = ref('');
+
+
 
 const { login } = useAuthStore();
 
@@ -52,12 +63,15 @@ const togglePasswordVisibility = () => {
 const handleLogin = async () => {
   try {
     await login(userValue.value, passwordValue.value);
-    router.push("/")
+    router.push("/");
   } catch (error) {
     console.error('Erro ao fazer login:', error);
   }
+  usernameError.value = 'Usuário ou senha inválidos';
+  passwordError.value = '';
 };
 </script>
+
 
 
 
