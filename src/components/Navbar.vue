@@ -7,6 +7,13 @@
       <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
       <li class="nav-item"><router-link to="/relatorio">RELATÓRIOS</router-link></li>
     </ul>
+    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/userList">USUARIO</router-link></li>
+    </ul>
+
+    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
+    </ul>
   </nav>
 </template>
 
@@ -14,7 +21,7 @@
 
 </script>
 
-<style scoped>
+<style>
 .navbar {
   background-color: #003654;
   display: flex;

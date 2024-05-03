@@ -1,18 +1,18 @@
 <template>
-      <div>
-        <Navbar />
-        <div class="content-container">
-          <RouterView />
-        </div>
-        <Footer />
+  <v-app>
+    <Navbar />
+    <div class="content-container">
+        <RouterView />
       </div>
-    </template>
+    <Footer />
+  </v-app>
+</template>
 
 <script setup>
-import { RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+import Navbar from './components/Navbar.vue';
+import Footer from './components/Footer.vue';
 </script>
+
 
 <style scoped>
 .content-container {
@@ -24,6 +24,4 @@ import Footer from './components/Footer.vue'
       width: 100%;
   
 }
-
-
 </style>

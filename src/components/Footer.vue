@@ -13,18 +13,18 @@
   </footer>
 </template>
 
-<style scoped>
+<style>
+/* Estilize o footer */
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: 100px;
+  height: 100px; /* Defina a altura desejada */
   background-color: #808080;
   color: white;
   text-align: center;
   display: flex;
   align-items: center;
+  position: fixed; /* Fixe o footer na parte inferior da tela */
+  bottom: 0; /* Alinhe o footer na parte inferior da tela */
 }
 
 .footer-content {
@@ -32,6 +32,7 @@
   align-items: center;
   justify-content: space-between;
   width: 90%;
+  margin: 0 auto; /* Centralize o conteúdo horizontalmente */
 }
 
 .footer-logo {
@@ -66,11 +67,5 @@
 .footer-nav-item a:hover {
   background-color: #969696;
   border-radius: 3px;
-}
-
-@media (min-width: 769px) {
-  .footer-nav-item {
-    margin-right: 20px; 
-  }
 }
 </style>
