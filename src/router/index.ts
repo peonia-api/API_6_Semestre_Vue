@@ -4,6 +4,7 @@ import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
 
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -18,6 +19,7 @@ const router = createRouter({
     return { top: 0 };
   }
 });
+
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();

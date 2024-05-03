@@ -1,208 +1,88 @@
 <template>
+  <div class="title-ocorrencias">
+    <p>Relatório de ocorrências</p>
+  </div>
   <div class="outer-container">
-    <div class="titulo-container">
-      <div class="title">
-        <p>Relatório de ocorrências</p>
-      </div>
-      <div class="export-dropdown">
-        <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
-      </div>
+    <div class="export-dropdown">
+      <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
     </div>
-    <div class="table">
-      <div class="table-header">
-        <div class="table-row">
-          <div class="table-column">Ocorrência</div>
-          <div class="table-column">Data</div>
-          <div class="table-column">Horário</div>
-          <div class="table-column">Sala</div>
-        </div>
-      </div>
-      <div class="table-body" ref="tableBody">
-        <div v-for="(item, index) in displayedData" :key="index" class="table-row">
-          <div class="table-column">
-            <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
-          </div>
-          <div class="table-column">{{ item.formattedDate }}</div>
-          <div class="table-column">{{ item.formattedTime }}</div>
-          <div class="table-column">Laboratório</div>
-        </div>
-      </div>
+
+    <div class="table-container">
+      <TableReports :items-per-page="6"></TableReports>
     </div>
-    <div class="pagination">
-         <Button label="Anterior" severity="contrast"  @click="prevPage" :disabled="currentPage === 1"></Button>
-        <div class="page-numbers">
-          <Button v-for="pageNumber in totalPages" :key="pageNumber" @click="gotoPage(pageNumber)" :class="{ active: pageNumber === currentPage }">{{ pageNumber }}</Button>
-        </div>
-        <Button label="Próximo" severity="contrast" @click="nextPage" :disabled="currentPage === totalPages"></Button>
-      </div>
   </div>
 </template>
 
 <script setup>
-import { RegistroStore } from '../stores/index';
-import { onMounted, ref, computed } from 'vue';
-import { format } from 'date-fns';
+import TableReports from '../components/TableReports.vue';
 import * as XLSX from 'xlsx';
-import Button from 'primevue/button';
-
-const registroRedzone = RegistroStore();
-
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados;
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-}
-
-onMounted(() => {
-  pegarDados();
-});
-
-const data = ref([]);
-const currentPage = ref(1);
-const itemsPerPage = 6;
-
-const formattedData = computed(() => {
-  return data.value.map(item => ({
-    ...item,
-    formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
-    formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
-  }));
-});
-
-const totalPages = computed(() => Math.ceil(formattedData.value.length / itemsPerPage));
-
-const displayedData = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return formattedData.value.slice(startIndex, endIndex);
-});
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-}
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-}
-
-const gotoPage = (pageNumber) => {
-  currentPage.value = pageNumber;
-}
 
 const exportToExcel = () => {
-  const worksheet = XLSX.utils.json_to_sheet(formattedData.value.map(item => ({
-    'Ocorrência': item.occurrence,
-    'Hora': item.formattedDate,
-    'Data': item.formattedTime,
-    'Sala': 'Laboratório'
-  })))
+  const formattedData = JSON.parse(localStorage.getItem('formattedData'));
 
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Ocorrências');
-  XLSX.writeFile(workbook, 'relatorio_ocorrencias.xlsx');
+  if (formattedData) {
+    const worksheet = XLSX.utils.json_to_sheet(formattedData.map(item => ({
+      'Ocorrência': item.occurrence === '0' ? 'saída' : 'entrada',
+      'Data': item.formattedDate,
+      'Hora': item.formattedTime,
+      'Sala': 'Laboratório'
+    })));
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Ocorrências');
+    XLSX.writeFile(workbook, 'relatorio_ocorrencias.xlsx');
+  } else {
+    console.log('Não há dados formatados no localStorage.');
+  }
 }
-
 </script>
 
-<style>
 
+<style>
 .outer-container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    padding-top: 15px;
     background-color: #f3f3f3;
     border-radius: 15px;
     align-items: center;
     width: 75%;
-    height: 60%;
-}
-
-.table {
-    background-color: #ffffff;
-    border-radius: 8px;
-    width: 90%;
-    height: 70%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin-bottom: 150px;
 }
 
 
-.table-header {
+.table-container {
+  background-color: #f3f3f3;
+  border-radius: 15px;
+  align-items: center;
+  width: 90%;
+}
+
+.title-ocorrencias {
+  font-size: 27px;
   font-weight: bold;
-  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
 }
 
-.table-row {
-  display: flex;
-  align-items: center;
-  padding: 8px 0;
-}
-
-.table-column {
-  flex: 1;
-  text-align: center;
-  margin-right: 20px;
-}
-
-.table-body .table-row:not(:last-child) {
-  border-bottom: 1px solid #ccc;
-}
-
-.pi.pi-arrow-right,
-.pi.pi-arrow-left {
-  font-size: 1.0rem; 
-  margin: 0 5px; 
-  border: 2px solid; 
-  border-radius: 10px; 
-  padding: 5px; 
-}
-
-.pi.pi-arrow-right {
-  color: green; 
-  border-color: green; 
-}
-
-.pi.pi-arrow-left {
-  color: red; 
-  border-color: red; 
-}
-
-.titulo-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold; 
-  margin-left: 30px;
+.title-ocorrencias p {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
 }
 
 .export-icon {
   width: 30px; 
   height: 35px;
+  transition: opacity 0.3s ease; 
 }
 
+.export-icon:hover {
+  opacity: 0.7;
+}
 .export-dropdown{
-  margin-right: 60px;
-}
-
-.pagination {
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.pagination button {
-  margin: 0 5px;
-  background-color: rgba(0, 51, 101, 1);
-  height: 25px;
+  align-self: flex-end;
+  margin-right: 35px;
+  margin-bottom: 20px;
 }
 </style>

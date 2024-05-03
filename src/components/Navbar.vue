@@ -4,7 +4,8 @@
       <img src="./icons/Altave.png" alt="Logo" class="navbar-logo">
     </div>
     <ul class="nav-list">
-      <li class="nav-item"><router-link to="/">RELATÓRIOS</router-link></li>
+      <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
+      <li class="nav-item"><router-link to="/relatorio">RELATÓRIOS</router-link></li>
     </ul>
     <ul class="nav-list">
       <li class="nav-item"><router-link to="/userList">USUARIO</router-link></li>

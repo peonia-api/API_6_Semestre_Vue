@@ -4,7 +4,7 @@ import type RequestParams from "../../interfaces/RequestParams";
 
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/record'
+    baseURL: 'http://localhost:8082/record'
 })
 
 
