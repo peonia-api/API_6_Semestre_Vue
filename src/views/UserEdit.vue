@@ -29,7 +29,8 @@ import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import UsuarioStore from '../stores/Usuario.ts';
+import UsuarioStore from '../stores/Usuario';
+import { avisoEditar } from '../plugins/sweetalert';
 
 const router = useRouter();
 const { findByIdUser, putUser } = UsuarioStore();
@@ -46,6 +47,10 @@ const userData = ref({
   authorizations: [{ name: 'ROLE_ADMIN' }] 
 });
 
+onMounted(async () => {
+  await getUser();
+});
+
 async function getUser() {
   try {
     const response = await findByIdUser(userId);
@@ -56,19 +61,21 @@ async function getUser() {
   }
 }
 
-const submitPutForm = async () => {
-  try {
-    await putUser(userId, userData.value);
-    router.push("/userList");
-  } catch (error) {
-    console.error('Erro ao editar usuário:', error);
+async function submitPutForm() {
+  const result = await avisoEditar();
+  if (result.isConfirmed) {
+    try {
+      await putUser(userId, userData.value);
+      router.push("/userList");
+    } catch (error) {
+      console.error('Erro ao editar usuário:', error);
+    }
   }
-};
+}
 
-onMounted(async () => {
-  await getUser();
-});
 </script>
+
+
   
 
 <style scoped>

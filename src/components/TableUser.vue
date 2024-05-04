@@ -15,7 +15,7 @@
       <div class="table-column">{{ user.email }}</div>
       <div class="table-column">{{ user.function }}</div>
       <div class="table-column">
-        <span class="pi pi-times delete-icon" @click="deleteUsers(user.id)"></span>
+        <span class="pi pi-times delete-icon" @click="deleteUser(user.id)"></span>
         <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png" @click="router.push(`/editUser/${user.id}`)"/> </span>
       </div>
     </div>
@@ -42,9 +42,9 @@
 import { computed, onMounted, ref } from 'vue';
 import UsuarioStore from '../stores/Usuario';
 import type { Usuario } from "../interfaces/User";
-
 import 'primeicons/primeicons.css'
 import { useRouter } from 'vue-router';
+import { avisoDeletar } from '../plugins/sweetalert';
 
 const router = useRouter();
 const registroUser = UsuarioStore();
@@ -85,12 +85,16 @@ const nextPage = () => {
   }
 }
 
-const deleteUsers = async (userId: string) => {
-  try {
-    console.log(userId);
-    await registroUser.deleteUsuario(userId);
-  } catch (error) {
-    console.error('Erro ao excluir usuário:', error);
+const deleteUser = async (userId: string) => {
+  const result = await avisoDeletar();
+  if (result.isConfirmed) {
+    try {
+      console.log(userId);
+      await registroUser.deleteUsuario(userId);
+      fetchUsers(); 
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    }
   }
 }
 </script>
