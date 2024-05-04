@@ -6,8 +6,13 @@
       </div>
       <div class="Input-Texts">
         <div class="input-container">
-          <div v-if="usernameError" class="error-message" style="color: red;">{{ usernameError }}</div>
-          <InputText type="text" v-model="userValue" placeholder="Usuário" />
+          <div v-if="hasError" class="error-message" style="color: red;">{{ errorMessage }}</div>
+          <InputText
+            type="text"
+            v-model="userValue"
+            placeholder="Usuário"
+            :class="{ 'error-input': hasError }"
+          />
         </div>
       </div>
 
@@ -16,10 +21,9 @@
           v-model="passwordValue"
           :type="showPassword ? 'text' : 'password'"
           placeholder="Senha"
-          class="password-input"
+          :class="{ 'error-input': hasError }"
         />
-        <div v-if="passwordError" class="error-message">{{ passwordError }}</div>
-
+      
         <i
           class="pi"
           :class="showPassword ? 'pi-eye' : 'pi-eye-slash'"
@@ -35,6 +39,8 @@
   </div>
 </template>
 
+
+
 <script setup>
 import { ref } from 'vue';
 import InputText from 'primevue/inputtext';
@@ -49,8 +55,8 @@ const router = useRouter()
 const userValue = ref('');
 const passwordValue = ref('');
 const showPassword = ref(false);
-const usernameError = ref('');
-const passwordError = ref('');
+const hasError = ref(false);
+const errorMessage = ref('');
 
 
 
@@ -66,13 +72,11 @@ const handleLogin = async () => {
     router.push("/");
   } catch (error) {
     console.error('Erro ao fazer login:', error);
-  }
-  usernameError.value = 'Usuário ou senha inválidos';
-  passwordError.value = '';
-};
+    hasError.value = true;
+    errorMessage.value = 'Usuário ou senha inválidos';
+     }
+   };
 </script>
-
-
 
 
 <style scoped>
@@ -137,5 +141,9 @@ const handleLogin = async () => {
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
+}
+
+.error-input {
+  border-color: red;
 }
 </style>
