@@ -10,13 +10,28 @@
       <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
     </ul>
     <ul class="nav-list-button">
-      <li class="nav-item"><Button class="button-logout" @click="nextPage"><p>SAIR</p></Button></li>
+      <li class="nav-item">
+        <Button class="button-logout" @click="logout">
+          <p>SAIR</p>
+        </Button>
+      </li>
     </ul>
   </nav>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import { avisoLogout} from '../plugins/sweetalert';
 
+const router = useRouter();
+
+const logout = async () => {
+  const result = await avisoLogout();
+  if (result.isConfirmed) {
+  localStorage.removeItem('token');
+  router.push('/login');
+  }
+}
 </script>
 
 <style>

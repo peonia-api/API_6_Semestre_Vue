@@ -26,4 +26,30 @@ export async function avisoDeletar(): Promise<SweetAlertResult> {
       cancelButtonText: "Cancelar",
     });
   }
+
+  export async function avisoVoltar(): Promise<SweetAlertResult> {
+    return Swal.fire({
+      title: "Deseja voltar para a tela de Listagem",
+      text: "Esta ação não pode ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, voltar",
+      cancelButtonText: "Cancelar",
+    });
+  }
+  
+  export async function avisoLogout(): Promise<SweetAlertResult> {
+    return Swal.fire({
+      title: "Deseja Sair",
+      text: "Esta ação não pode ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, sair",
+      cancelButtonText: "Cancelar",
+    });
+  }
   

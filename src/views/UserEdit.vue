@@ -18,7 +18,8 @@
       </div>
     </div>
     <div class="Register-Button">
-      <Button label="Editar" severity="contrast" @click="submitPutForm"></Button>
+      <Button label="Voltar" class="button-edit" severity="contrast" @click="submitVoltar"></Button>
+      <Button label="Editar" class="button-edit" severity="contrast" @click="submitPutForm"></Button>
     </div>
   </UserBox>
 </template>
@@ -30,7 +31,7 @@ import UserBox from '@/components/UserBox.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import UsuarioStore from '../stores/Usuario';
-import { avisoEditar } from '../plugins/sweetalert';
+import { avisoEditar, avisoVoltar } from '../plugins/sweetalert';
 
 const router = useRouter();
 const { findByIdUser, putUser } = UsuarioStore();
@@ -72,7 +73,12 @@ async function submitPutForm() {
     }
   }
 }
-
+async function submitVoltar() {
+  const result = await avisoVoltar();
+  if (result.isConfirmed) {
+    router.push("/userList");
+  }
+}
 </script>
 
 
@@ -105,5 +111,9 @@ async function submitPutForm() {
 
 .input-text {
   width: 80%;
+}
+
+.button-edit{
+  margin: 25px;
 }
 </style>
