@@ -123,7 +123,7 @@ const handleLogin = async () => {
 .acessar {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .acessar button {
