@@ -7,36 +7,60 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { Chart } from 'chart.js/auto';
+import { RegistroStore } from '../stores/index';
+import { format } from 'date-fns';
 
-const dados = ref([
-  { totalEntrada: 12, data: '25/04/2024' },
-  { totalEntrada: 4, data: '24/04/2024' },
-  { totalEntrada: 6, data: '23/04/2024' },
-  { totalEntrada: 11, data: '22/04/2024' },
-  { totalEntrada: 9, data: '21/04/2024' },
-  { totalEntrada: 15, data: '20/04/2024' },
-  { totalEntrada: 18, data: '19/04/2024' }
-])
+const registroRedzone = RegistroStore();
 
+const data = ref([]);
 const chart = ref(null);
 
 onMounted(() => {
+  pegarDados();
+});
+
+const pegarDados = async () => {
+  try {
+    await registroRedzone.historicRegister();
+    data.value = registroRedzone.dados;
+    
+    // Ordenando os dados pela data antes de criar o gráfico
+    data.value.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+    
+    // Chamando a função para criar o gráfico com os dados atualizados
+    criarGrafico();
+  } catch (error) {
+    console.log('Erro ao obter dados:', error);
+  }
+}
+
+const criarGrafico = () => {
+  const dadosSomaPorDia = data.value.filter(item => item.occurrence === '1').reduce((acc, item) => {
+    const dataFormatada = format(new Date(item.dateTime), 'dd/MM/yyyy');
+    acc[dataFormatada] = acc[dataFormatada] ? acc[dataFormatada] + 1 : 1;
+    return acc;
+  }, {});
+
+  const labels = Object.keys(dadosSomaPorDia);
+  const dataValues = Object.values(dadosSomaPorDia);
+
   const datacollection = ref({
-    labels: dados.value.map(item => item.data),
+    labels: labels,
     datasets: [
       {
-        label: 'Total Entrada',
+        label: 'Total de Entradas por Dia',
         backgroundColor: '#f87979',
-        data: dados.value.map(item => item.totalEntrada),
+        data: dataValues,
       },
     ],
   });
+
   const ctx = chart.value.getContext('2d');
   new Chart(ctx, {
     type: 'line',
     data: datacollection.value
   });
-});
+}
 </script>
 
 <style>
