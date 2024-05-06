@@ -16,3 +16,11 @@ export interface Authorization {
 export interface User {
     usuario: Usuario[];
 }
+
+
+export interface UsuarioPefil {
+    name: string;
+    surname: string;
+    email: string;
+    function: string;
+}

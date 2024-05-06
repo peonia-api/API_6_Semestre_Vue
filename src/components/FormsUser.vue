@@ -24,11 +24,35 @@
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
+import { onMounted, ref } from 'vue';
+import type { UsuarioPefil } from "../interfaces/User";
 import UsuarioStore from '../stores/Usuario';
 
-const registroUser = UsuarioStore();
-const currentUser = registroUser.users[0];
 
+const registroUser = UsuarioStore();
+
+
+const currentUser = ref<UsuarioPefil>({
+  name: '',
+  email: '',
+  function: '',
+  surname: ''
+});
+
+const fudeuu= async () => {
+  try {
+    const user = await registroUser.fetchCurrentUser();
+    console.log(user);
+    
+    Object.assign(currentUser.value, user); 
+  } catch (error) {
+    console.error('Erro ao buscar usuário atual:', error);
+  }
+};
+
+onMounted(() => {
+  fudeuu();
+});
 </script>
 
 <style scoped>
