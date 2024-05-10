@@ -24,6 +24,9 @@
       <div class="input-container">
         <InputText class="input-field" type="text" placeholder="Função" />
       </div>
+      <div class="Register-Button">
+      <Button label="Cadastrar" severity="contrast"></Button>
+    </div>
     </div>
   </UserBox>
  
@@ -34,8 +37,8 @@
 <script setup>
 import UserBox from '@/components/UserBox.vue';
 import InputText from 'primevue/inputtext';
-
 import FloatLabel from 'primevue/floatlabel';
+import Button from 'primevue/button';
 
 
 
@@ -67,6 +70,10 @@ import FloatLabel from 'primevue/floatlabel';
 
 .input-field {
   width: 350px;
+}
+
+.Register-Button {
+  text-align: center; 
 }
 
 .FloatLabel label {
