@@ -1,28 +1,28 @@
 <template>
 <UserBox background_color="blue_color">
     <div class="Input-Texts">
-        <FloatLabel>
-           <InputText id="nomeredzone" v-model="value" />
+        <FloatLabel class="field">
+           <InputText class="input-field" id="nomeredzone" v-model="value" />
            <label for="nomeredzone">Nome</label>
         </FloatLabel>
-        <FloatLabel>
-           <InputText id="arearedzone" v-model="value" />
+        <FloatLabel class="field">
+           <InputText class="input-field" id="arearedzone" v-model="value" />
            <label for="arearedzone">Área</label>
         </FloatLabel>
-        <FloatLabel>
-           <InputText id="responsaveldzone" v-model="value" />
+        <FloatLabel class="field">
+           <InputText class="input-field" id="responsaveldzone" v-model="value" />
            <label for="responsavelredzone">Responsável</label>
         </FloatLabel>
-        <FloatLabel>
-           <InputText id="capmaximaredzone" v-model="value" />
+        <FloatLabel class="field">
+           <InputText class="input-field" id="capmaximaredzone" v-model="value" />
            <label for="capmaximaredzone">Capacidade Máxima</label>
         </FloatLabel>
-        <FloatLabel>
-           <InputText id="guardasredzone" v-model="value" />
+        <FloatLabel class="field">
+           <InputText class="input-field" id="guardasredzone" v-model="value" />
            <label for="guardasredzone">Guardas</label>
         </FloatLabel>
       <div class="input-container">
-        <InputText type="text" placeholder="Função" />
+        <InputText class="input-field" type="text" placeholder="Função" />
       </div>
     </div>
   </UserBox>
@@ -45,7 +45,7 @@ import FloatLabel from 'primevue/floatlabel';
 .Input-Texts {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: -30px;
 }
 
 
@@ -59,7 +59,14 @@ import FloatLabel from 'primevue/floatlabel';
 
 .FloatLabel {
   position: relative;
-  margin-bottom: 20px;
+}
+
+.field {
+  margin-bottom: 25px;
+}
+
+.input-field {
+  width: 350px;
 }
 
 .FloatLabel label {

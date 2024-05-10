@@ -49,7 +49,7 @@ export default {
 
 
   .box {
-    width: 650px;
+    width: 800px;
     height: 440px;
     display: flex;
     flex-direction: column; 
