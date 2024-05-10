@@ -49,7 +49,7 @@ export default {
 }
 
 .white_color {
-  background-color: white;
+  background-color: rgba(245, 245, 245);
 }
 
 
@@ -60,6 +60,6 @@ export default {
     flex-direction: column; 
     align-items: center;
     justify-content: center; 
-    padding-top: 40px; 
+    padding-top: 40px;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-<UserBox background_color="blue_color">
+<UserBox background_color="white_color" class="box_style">
     <div class="Input-Texts">
         <FloatLabel class="field">
            <InputText class="input-field" id="nomeredzone" v-model="value" />
@@ -69,12 +69,17 @@ import Button from 'primevue/button';
 }
 
 .input-field {
-  width: 350px;
+  width: 430px;
 }
 
 .Register-Button {
   text-align: center; 
 }
+
+.box_style {
+    border: 2px solid #333;
+    width: auto;
+  }
 
 .FloatLabel label {
   position: absolute;
