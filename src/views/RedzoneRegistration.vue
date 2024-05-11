@@ -1,4 +1,7 @@
 <template>
+  <div class="title-redzones">
+    <p>Cadastro de Redzones</p>
+  </div>  
 <UserBox background_color="white_color" class="box_style">
     <div class="Input-Texts">
         <FloatLabel class="field">
@@ -70,6 +73,17 @@ const areas = ref([
 </script>
 
 <style scoped>
+.title-redzones {
+    font-size: 27px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: -25px;
+}
+
+.title-redzones p {
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ccc;
+}
 .Input-Texts {
   display: flex;
   flex-direction: column;
@@ -98,12 +112,14 @@ const areas = ref([
 }
 
 .Register-Button {
-  text-align: center; 
+  text-align: center;
+  margin-top: -10px;
 }
 
 .box_style {
-    border: 2px solid #333;
+    border: 2px solid rgb(235, 235, 235);
     width: auto;
+    border-radius: 5px;
   }
 
   .DropDown-style {
@@ -116,7 +132,7 @@ const areas = ref([
   left: 0;
   transition: transform 0.3s ease;
   transform-origin: 0 0;
-  color: #333; 
+  color: #333; /* Cor do rótulo */
 }
 
 .FloatLabel input:focus + label,
