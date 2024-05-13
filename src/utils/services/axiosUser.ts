@@ -29,7 +29,6 @@ export const getUser = async (route: string, query: RequestParams<unknown> | nul
 };
 
 export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuario>> => {
-    
     try {
 
         const token = localStorage.getItem('token');
@@ -52,22 +51,21 @@ export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuari
 export const getCurrentUser = async (): Promise<Usuario> => {
     try {
         const token = localStorage.getItem('token');
-    
         if (!token) {
             throw new Error('Token não encontrado.');
         }
 
-        const response = await api.get<{ usuario: Usuario }>(`/current-user`, {
+        const response = await api.get('/me', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}` 
             }
         });
-        return response.data.usuario;
+        console.log('Response from getCurrentUser:', response);
+        return response.data;
     } catch (error) {
-        throw (error as AxiosError);
+        throw error;
     }
 }
-
 
 export const deleteUser = async (userId: string): Promise<void> => {
     try {

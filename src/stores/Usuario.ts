@@ -8,13 +8,14 @@ const UsuarioStore = defineStore('usuario', () => {
 
     const fetchCurrentUser = async () => {
         try {
-            const currentUser = await getCurrentUser();
-            users.value = [currentUser];
-        } catch (error: unknown) {
+            const user = await getCurrentUser();
+            console.log(user);
+            return user;
+        } catch (error) {
             console.error('Erro ao buscar usuário atual:', error);
         }
     };
-
+    
     const getAllUsers = async () => {
         try {
             const res = await getUser('');
