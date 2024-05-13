@@ -20,19 +20,14 @@
         </FloatLabel>
 
         <FloatLabel class="field">
-           <InputText class="input-field" id="capmaximaredzone" v-model="value" />
+           <InputNumber class="input-field" id="capmaximaredzone" v-model="value" />
            <label for="capmaximaredzone">Capacidade Máxima</label>
         </FloatLabel>
 
         <FloatLabel class="field">
-           <Dropdown class="DropDown-style" v-model="selectedGuard" inputId="id-guards" :options="guards" optionLabel="name"/>
-           <label for="dd-city">Guardas</label>
+           <MultiSelect class="DropDown-style" v-model="selectedGuard" Id="id-guards" :options="guards" optionLabel="name"/>
+           <label for="id_guards">Guardas</label>
          </FloatLabel>
-
-         <FloatLabel class="field">
-           <InputText class="input-field" id="funcaoredzone" v-model="value" />
-           <label for="funcaoredzone">Função</label>
-        </FloatLabel>
 
       <div class="Register-Button">
          <Button label="Cadastrar" severity="contrast"></Button>
@@ -46,8 +41,11 @@
 import UserBox from '@/components/UserBox.vue';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
+import InputNumber from 'primevue/inputnumber';
+import MultiSelect from 'primevue/multiselect';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
+
 
 import { ref } from "vue";
 
@@ -64,9 +62,6 @@ const areas = ref([
     { name: 'Área 2', code: 'A2' },
     { name: 'Área 3', code: 'A3' },
 ]);
-
-
-
 
 </script>
 
@@ -87,7 +82,6 @@ const areas = ref([
   flex-direction: column;
   margin-top: -30px;
 }
-
 
 .input-container {
   margin-bottom: 20px;
