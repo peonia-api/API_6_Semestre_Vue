@@ -35,13 +35,11 @@
         </FloatLabel>
 
       <div class="Register-Button">
-      <Button label="Cadastrar" severity="contrast"></Button>
-    </div>
+         <Button label="Cadastrar" severity="contrast"></Button>
+      </div>
   </div>
   </UserBox>
  
-
-
 </template>
 
 <script setup>
@@ -74,15 +72,15 @@ const areas = ref([
 
 <style scoped>
 .title-redzones {
-    font-size: 27px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: -25px;
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
 }
 
 .title-redzones p {
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
 }
 .Input-Texts {
   display: flex;
