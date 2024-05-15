@@ -8,7 +8,7 @@ import RedzoneListing from "@/views/RedzoneListing.vue";
   };
 
  export const ListRedzoneRoute = {
-    path: '/redzonelist',
+    path: '/redzoneList',
     name: 'RedzoneListing',
     component: RedzoneListing
 };

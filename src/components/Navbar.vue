@@ -7,6 +7,7 @@
       <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
       <li class="nav-item"><router-link to="/report">RELATÓRIOS</router-link></li>
       <li class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
+      <li class="nav-item"><router-link to="/redzoneList">REDZONES</router-link></li>
       <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
     </ul>
     <ul class="nav-list-button">
