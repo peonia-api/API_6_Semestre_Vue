@@ -14,7 +14,7 @@
             <div class="table-column">admin</div>
             <div class="table-column">
                 <span class="pi pi-times delete-icon"></span>
-                <span class="edit-icon"> <img src="../assets/icons/iconEdit.png"/></span>
+                <span class="edit-icon"> <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/1`)" /></span>
             </div>
         </div>
     </div>
@@ -39,6 +39,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import 'primeicons/primeicons.css'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const currentPage = ref(1);
 const itemsPerPage = 6;
