@@ -1,5 +1,5 @@
 import RedzoneRegistration from "@/views/RedzoneRegistration.vue";
-
+import RedzoneListing from "@/views/RedzoneListing.vue";
 
  export const RedzoneRegisterRoute = {
     path: '/redzoneregistration',
@@ -7,3 +7,8 @@ import RedzoneRegistration from "@/views/RedzoneRegistration.vue";
     component: RedzoneRegistration
   };
 
+ export const ListRedzoneRoute = {
+    path: '/redzonelist',
+    name: 'RedzoneListing',
+    component: RedzoneListing
+};
