@@ -8,7 +8,7 @@
     </div>
 
     <div class="table-container">
-      <TableUser></TableUser>
+     <TableRedzones></TableRedzones>
     </div>
 
   </div>  
@@ -16,6 +16,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
+import TableRedzones from '../components/TableRedzones.vue'
 
 const router = useRouter();
 
