@@ -4,7 +4,7 @@
     </div>
     <div class="outer-container">
         <div class="export-dropdown">
-            <button class="button-add">ADICIONAR ÁREA</button>
+            <button @click="goToCadastro" class="button-add">ADICIONAR ÁREA</button>
         </div>
 
         <div class="table-container">
@@ -14,7 +14,13 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import TableArea from '../components/TableArea.vue'
+const router = useRouter();
+
+const goToCadastro = () => {
+  router.push({ name: 'cadastroAreaView' });
+};
 
 </script>
 

@@ -3,7 +3,7 @@ import {RegisterRoute, PainelRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
-import { AreaRoute } from "./AreaRoute";
+import { AreaRoute, RegistrationAreaRoute } from "./AreaRoute";
 
 
 const router = createRouter({
@@ -16,7 +16,8 @@ const router = createRouter({
     RegistrationRoute,
     PerfilRoute,
     EditUser,
-    AreaRoute
+    AreaRoute,
+    RegistrationAreaRoute
   ],
   scrollBehavior() {
     return { top: 0 };
