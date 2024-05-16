@@ -37,16 +37,21 @@
       </div>
     </UserBox>
   </div>
+  <div v-if="loadingPage" class="loading-spinner">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+  </div>
 </template>
 
 
 
+
 <script setup>
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import InputText from 'primevue/inputtext';
 import UserBox from '@/components/UserBox.vue';
 import Button from 'primevue/button';
 
+import UsuarioStore from '../stores/Usuario';
 import { useAuthStore } from '../stores/Login.ts';
 import { useRouter } from 'vue-router';
 
@@ -57,29 +62,45 @@ const passwordValue = ref('');
 const showPassword = ref(false);
 const hasError = ref(false);
 const errorMessage = ref('');
+const loadingPage = ref(false)
+const registroUser = UsuarioStore();
 
-
+const fetchUser = async () => {
+  try {
+    const user = await registroUser.fetchCurrentUser();
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  } catch (error) {
+    console.error('Erro ao buscar usuário atual:', error);
+  }
+};
 
 const { login } = useAuthStore();
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
-
 const handleLogin = async () => {
   try {
+    loadingPage.value = true
     await login(userValue.value, passwordValue.value);
-    router.push("/");
+    await fetchUser().finally(() => {
+      router.push({ name: 'painelView' }).then(() => {
+        nextTick(() => {
+            window.location.reload()
+        });
+      });
+    })
   } catch (error) {
     console.error('Erro ao fazer login:', error);
     hasError.value = true;
     errorMessage.value = 'Usuário ou senha inválidos';
-     }
-   };
+  }
+};
 </script>
 
 
 <style scoped>
+
 .content {
   display: flex;
   position: absolute;

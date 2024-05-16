@@ -24,13 +24,8 @@
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import type { UsuarioPefil } from "../interfaces/User";
-import UsuarioStore from '../stores/Usuario';
-
-
-const registroUser = UsuarioStore();
-
 
 const currentUser = ref<UsuarioPefil>({
   name: '',
@@ -39,20 +34,15 @@ const currentUser = ref<UsuarioPefil>({
   surname: ''
 });
 
-const fudeuu= async () => {
-  try {
-    const user = await registroUser.fetchCurrentUser();
-    console.log(user);
-    
-    Object.assign(currentUser.value, user); 
-  } catch (error) {
-    console.error('Erro ao buscar usuário atual:', error);
+const loadUserFromLocalStorage = () => {
+  const userStr = localStorage.getItem('currentUser');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    Object.assign(currentUser.value, user);
   }
 };
 
-onMounted(() => {
-  fudeuu();
-});
+loadUserFromLocalStorage();
 </script>
 
 <style scoped>
