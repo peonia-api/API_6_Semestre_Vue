@@ -17,10 +17,8 @@
             </div>
             <div class="table-column">{{ area.user.name }}</div>
             <div class="table-column">
-                <span class="pi pi-times delete-icon"></span>
-                <span class="edit-icon">
-                    <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/1`)" />
-                </span>
+                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+                <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/${area.id}`)"/> </span>
             </div>
         </div>
     </div>
@@ -48,6 +46,7 @@ import AreaStore from '../stores/Area';
 import type { Area } from "../interfaces/Area";
 import 'primeicons/primeicons.css'
 import { useRouter } from 'vue-router';
+import { avisoDeletarArea } from '../plugins/sweetalert';
 
 const router = useRouter();
 
@@ -87,6 +86,20 @@ const nextPage = () => {
         currentPage.value++;
     }
 }
+
+const deleteArea = async (areaId: string) => {
+  const result = await avisoDeletarArea();
+  if (result.isConfirmed) {
+    try {
+      console.log(areaId);
+      await registroArea.deleteArea(areaId);
+      fetchAreas(); 
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    }
+  }
+}
+
 </script>
 
 

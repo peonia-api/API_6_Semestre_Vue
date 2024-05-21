@@ -1,27 +1,24 @@
 <template>
-    <UserBox background_color="blue_color">
-      <div class="Input-Texts">
-        <div class="input-container">
-          <InputText type="text" v-model="userArea.name" placeholder="Nome" />
-        </div>
-        <div class="input-container">
-          <InputText type="text" v-model="userArea.description" placeholder="Descrição" />
-        </div>
-        <div>
-            <select class="input-select" v-model="userArea.user.id">
-                <option selected disabled>Responsável</option>
-                <option v-for="user in usersRole" :key="user.id" :value="user.id">
-                    {{ user.name }} - {{ user.authorizations.join(', ') }}
-                </option>
-            </select>
-        </div>
+  <UserBox background_color="blue_color">
+    <div class="Input-Texts">
+      <div class="input-container">
+        <InputText type="text" v-model="userArea.name" placeholder="Nome" />
       </div>
-      <div class="Register-Button">
-        <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
+      <div class="input-container">
+        <InputText type="text" v-model="userArea.description" placeholder="Descrição" />
       </div>
-    </UserBox>
-  </template>
-  
+      <div>
+        <select class="input-select" v-model="userArea.user.id">
+          <option value="" disabled>Gerente Responsável</option>
+          <option v-for="user in usersRole" :key="user.id" :value="user.id">{{ user.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="Register-Button">
+      <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
+    </div>
+  </UserBox>
+</template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
@@ -34,7 +31,7 @@ import UsuarioStore from '../stores/Usuario';
 import AreaStore from '../stores/Area.ts';
 
 const router = useRouter();
-const { create } = AreaStore(); 
+const { create } = AreaStore();
 const registroUser = UsuarioStore();
 
 const usersRole = ref([]);
@@ -42,11 +39,8 @@ const usersRole = ref([]);
 const fetchUsers = async () => {
   try {
     await registroUser.getAllUsers();
-    usersRole.value = registroUser.users.map(user => ({
-      id: user.id,
-      name: user.name,
-      authorizations: user.authorizations.map(auth => auth.name)
-    }));
+    usersRole.value = registroUser.users.filter(user => user.permissionType === 'ROLE_MANAGER');
+    console.log(usersRole.value);
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
   }
@@ -61,8 +55,7 @@ const userArea = ref({
   description: '',
   responsibleManager: 'Gerente Responsável',
   user: {
-    id: '',
-    name: ''
+    id: ''
   }
 });
 
@@ -77,7 +70,6 @@ const submitForm = async () => {
   }
 };
 </script>
-
 
 <style scoped>
 .send-image {
