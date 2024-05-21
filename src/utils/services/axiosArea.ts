@@ -5,39 +5,33 @@ import type { Area } from "@/interfaces/Area";
 
 const api = axios.create({
     baseURL: 'http://localhost:8080/area'
-});
+})
 
-
-
-export const getArea = async (route: string, query: RequestParams<unknown> | null = null, apiUse = api): AxiosPromise => {
+export const getArea = async (route: string, query: RequestParams<unknown> | null = null): AxiosPromise<Area[]> => {
     try {
         const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token de autenticação não encontrado');
         }
-        const response = await api.get<{ area: Area[] }>(route, {
+
+        return await api.get<Area[]>(route, {   
             headers: {
                 Authorization: `Bearer ${token}` 
             },
             params: { ...query }
         });
-        return response;
     } catch (error) {
         throw (error as AxiosError);
     }
-};
+}
 
 export const createArea = async (area: Area): Promise<AxiosResponse<Area>> => {
-    
     try {
-
         const token = localStorage.getItem('token');
-
         if (!token) {
             throw new Error('Token de autenticação não encontrado');
         }
-
         const response = await api.post<Area>('', area, {
             headers: {
                 Authorization: `Bearer ${token}` 

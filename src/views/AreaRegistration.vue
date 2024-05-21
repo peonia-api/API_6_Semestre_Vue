@@ -1,34 +1,83 @@
 <template>
     <UserBox background_color="blue_color">
-        <div class="Input-Texts">
-            <div class="input-container">
-                <InputText type="text" placeholder="Nome" />
-            </div>
-            <div class="input-container">
-                <InputText type="text" placeholder="Descrição" />
-            </div>
-            <div>
-                <select class="input-select">
-                    <option selected disabled>Responsável</option>
-                    <option value="testteet" >teste</option>
-                    <option value="testteet" >teste2</option>
-                </select>
-            </div>
+      <div class="Input-Texts">
+        <div class="input-container">
+          <InputText type="text" v-model="userArea.name" placeholder="Nome" />
         </div>
-        <div class="Register-Button">
-            <Button label="Cadastrar" severity="contrast"></Button>
+        <div class="input-container">
+          <InputText type="text" v-model="userArea.description" placeholder="Descrição" />
         </div>
+        <div>
+            <select class="input-select" v-model="userArea.user.id">
+                <option selected disabled>Responsável</option>
+                <option v-for="user in usersRole" :key="user.id" :value="user.id">
+                    {{ user.name }} - {{ user.authorizations.join(', ') }}
+                </option>
+            </select>
+        </div>
+      </div>
+      <div class="Register-Button">
+        <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
+      </div>
     </UserBox>
-</template>
-
+  </template>
+  
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
 
+import UsuarioStore from '../stores/Usuario';
+import AreaStore from '../stores/Area.ts';
 
+const router = useRouter();
+const { create } = AreaStore(); 
+const registroUser = UsuarioStore();
+
+const usersRole = ref([]);
+
+const fetchUsers = async () => {
+  try {
+    await registroUser.getAllUsers();
+    usersRole.value = registroUser.users.map(user => ({
+      id: user.id,
+      name: user.name,
+      authorizations: user.authorizations.map(auth => auth.name)
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
+
+const userArea = ref({
+  name: '',
+  description: '',
+  responsibleManager: 'Gerente Responsável',
+  user: {
+    id: '',
+    name: ''
+  }
+});
+
+const submitForm = async () => {
+  try {
+    console.log(userArea.value);
+    await create(userArea.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    router.push("/areaList");
+  }
+};
 </script>
+
 
 <style scoped>
 .send-image {

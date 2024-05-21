@@ -3,18 +3,24 @@
         <div class="table-header">
             <div class="table-row">
                 <div class="table-column">Área</div>
-                <div class="table-column">Red zone</div>
+                <div class="table-column">Red zones</div>
                 <div class="table-column">Responsável</div>
                 <div class="table-column">Ações</div>
             </div>
         </div>
-        <div class="table-row">
-            <div class="table-column">área 01</div>
-            <div class="table-column">red zone 01</div>
-            <div class="table-column">admin</div>
+        <div class="table-row" v-for="(area) in displayedAreas" :key="area.id">
+            <div class="table-column">{{ area.name }}</div>
+            <div class="table-column">
+                <div v-for="redZone in area.redZones" :key="redZone.id">
+                    {{ redZone.name }}
+                </div>
+            </div>
+            <div class="table-column">{{ area.user.name }}</div>
             <div class="table-column">
                 <span class="pi pi-times delete-icon"></span>
-                <span class="edit-icon"> <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/1`)" /></span>
+                <span class="edit-icon">
+                    <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/1`)" />
+                </span>
             </div>
         </div>
     </div>
@@ -37,7 +43,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import AreaStore from '../stores/Area';
+import type { Area } from "../interfaces/Area";
 import 'primeicons/primeicons.css'
 import { useRouter } from 'vue-router';
 
@@ -46,21 +54,41 @@ const router = useRouter();
 const currentPage = ref(1);
 const itemsPerPage = 6;
 
-const totalPages = computed(() => Math.ceil(length / itemsPerPage));
+const registroArea = AreaStore();
+const areasDados = ref<Area[]>([]);
 
+const fetchAreas = async () => {
+  try {
+    await registroArea.getAllareas();
+    areasDados.value = registroArea.areas;
+  } catch (error) {
+    console.error('Erro ao buscar Areas:', error);
+  }
+};
+
+onMounted(() => {
+    fetchAreas();
+});
+
+const displayedAreas = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return areasDados.value.slice(startIndex, endIndex);
+});
+
+const totalPages = computed(() => Math.ceil(areasDados.value.length / itemsPerPage));
 const prevPage = () => {
     if (currentPage.value > 1) {
         currentPage.value--;
     }
 }
-
 const nextPage = () => {
     if (currentPage.value < totalPages.value) {
         currentPage.value++;
     }
 }
-
 </script>
+
 
 <style>
 .table {
