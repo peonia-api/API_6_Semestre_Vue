@@ -1,34 +1,37 @@
 <template>
-    <nav v-if="!loadingData" class="navbar">
-      <div class="navbar-brand">
-        <img src="./icons/Altave.png" alt="Logo" class="navbar-logo">
-      </div>
-      <ul class="nav-list">
-        <li v-if="isAdminOrUser" class="nav-item"><router-link to="/">PAINEL</router-link></li>
-        <li v-if="isAdmin" class="nav-item"><router-link to="/report">RELATÓRIOS</router-link></li>
-        <li v-if="isAdmin" class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
-        <li v-if="isAdminOrUser" class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
-      </ul>
-      <ul class="nav-list-button">
-        <li class="nav-item">
-          <Button class="button-logout" @click="logout">
-            <p>SAIR</p>
-          </Button>
-        </li>
-      </ul>
-    </nav>
+  <nav v-if="!loadingData" class="navbar">
+    <div class="navbar-brand">
+      <img src="./icons/Altave.png" alt="Logo" class="navbar-logo">
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
+      <li v-if="isAdmin || isManager" class="nav-item"><router-link to="/report">RELATÓRIOS</router-link></li>
+      <li v-if="isAdmin" class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
+      <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
+      <li v-if="isAdmin" class="nav-item"><router-link to="/area">AREA</router-link></li>
+      <li v-if="isAdmin || isManager" class="nav-item"><router-link to="/redzone">REDZONE</router-link></li>
+    </ul>
+    <ul class="nav-list-button">
+      <li class="nav-item">
+        <Button class="button-logout" @click="logout">
+          <p>SAIR</p>
+        </Button>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
 import { avisoLogout } from '../plugins/sweetalert';
 
-
 const router = useRouter();
 const currentUserJSON = localStorage.getItem('currentUser');
 const currentUser = currentUserJSON ? JSON.parse(currentUserJSON) : null;
-const isAdmin = currentUser && currentUser.authorizations && currentUser.authorizations.some(auth => auth.name === 'ROLE_ADMIN');
-const isAdminOrUser = isAdmin || (currentUser && currentUser.authorizations && currentUser.authorizations.some(auth => auth.name === 'ROLE_USER'));
+
+const isAdmin = currentUser && currentUser.permissionType === 'ROLE_ADMIN';
+const isManager = currentUser && currentUser.permissionType === 'ROLE_MANAGER';
+
 
 const logout = async () => {
   const result = await avisoLogout();
@@ -37,9 +40,9 @@ const logout = async () => {
     localStorage.removeItem('currentUser');
     router.push('/login');
   }
-}
-
+};
 </script>
+
 
 <style>
 .navbar {
