@@ -3,6 +3,7 @@ import {PainelRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
+import { ListRedzoneRoute, RedzoneRegisterRoute } from "./RedzoneRoute";
 import { AreaRoute, RegistrationAreaRoute, EditArea } from "./AreaRoute";
 
 
@@ -15,6 +16,8 @@ const router = createRouter({
     RegistrationRoute,
     PerfilRoute,
     EditUser,
+    RedzoneRegisterRoute,
+    ListRedzoneRoute
     AreaRoute,
     RegistrationAreaRoute,
     EditArea
