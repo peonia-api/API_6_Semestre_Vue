@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {RegisterRoute, PainelRoute } from './RegisterRoute';
+import {PainelRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
@@ -10,7 +10,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     LoginRoute,
-    RegisterRoute,
     PainelRoute,
     UserRoute,
     RegistrationRoute,

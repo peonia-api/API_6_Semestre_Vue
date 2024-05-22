@@ -58,7 +58,18 @@ const criarGrafico = () => {
   const ctx = chart.value.getContext('2d');
   new Chart(ctx, {
     type: 'line',
-    data: datacollection.value
+    data: datacollection.value,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          }
+        }
+      }
+    }
   });
 }
 </script>
