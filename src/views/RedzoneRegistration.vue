@@ -5,7 +5,7 @@
 <UserBox background_color="white_color" class="box_style">
     <div class="Input-Texts">
         <FloatLabel class="field">
-           <InputText class="input-field" id="nomeredzone" v-model="value" />
+           <InputText class="input-field" id="nomeredzone" v-model="redzoneData.name" />
            <label for="nomeredzone">Nome</label>
         </FloatLabel>
 
@@ -20,17 +20,17 @@
         </FloatLabel>
 
         <FloatLabel class="field">
-           <InputNumber class="input-field" id="capmaximaredzone" v-model="value" />
+           <InputNumber class="input-field" id="capmaximaredzone" v-model="redzoneData.personLimit" />
            <label for="capmaximaredzone">Capacidade Máxima</label>
         </FloatLabel>
 
         <FloatLabel class="field">
-           <MultiSelect class="DropDown-style" v-model="selectedGuard" Id="id-guards" :options="guards" optionLabel="name"/>
+           <MultiSelect class="DropDown-style" v-model="redzoneData.responsibleGuard" Id="id-guards" :options="guards" optionLabel="name"/>
            <label for="id_guards">Guardas</label>
          </FloatLabel>
 
       <div class="Register-Button">
-         <Button label="Cadastrar" severity="contrast"></Button>
+         <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
       </div>
   </div>
   </UserBox>
@@ -46,22 +46,31 @@ import MultiSelect from 'primevue/multiselect';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 
-
+import { useRouter } from 'vue-router';
 import { ref } from "vue";
 
-const selectedGuard = ref();
-const guards = ref([
-    { name: 'Guarda 1', code: 'G1' },
-    { name: 'Guarda 2', code: 'G2' },
-    { name: 'Guarda 3', code: 'G3' },
-]);
+import RedzoneStore from '../stores/Redzone.ts'; 
 
-const selectedArea = ref();
-const areas = ref([
-    { name: 'Área 1', code: 'A1' },
-    { name: 'Área 2', code: 'A2' },
-    { name: 'Área 3', code: 'A3' },
-]);
+const router = useRouter();
+const { create } = RedzoneStore(); 
+
+const redzoneData = ref({
+  name: '',
+  personLimit: '',
+  responsibleGuard: ''
+});
+
+
+const submitForm = async () => {
+  try {
+    await create(redzoneData.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    router.push("/redzoneList");
+  }
+};
+
 
 </script>
 

@@ -12,8 +12,8 @@
     <div class="table-body">
       <div class="table-row" v-for="(redzone) in displayedRedzones" :key="redzone.id">
         <div class="table-column">{{ redzone.name }}</div>
-        <div class="table-column">{{ redzone.cameraSpot }}</div>
-        <div class="table-column">{{ redzone.description }}</div>
+        <div class="table-column">{{ }}</div>
+        <div class="table-column">{{ redzone.responsibleGuard}}</div>
         <div class="table-column">{{ redzone.personLimit }}</div>
         <div class="table-column">
           <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
