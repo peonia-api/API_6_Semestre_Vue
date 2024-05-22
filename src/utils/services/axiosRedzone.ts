@@ -66,3 +66,23 @@ export const getCurrentRedzone = async (): Promise<Redzone> => {
         throw (error as AxiosError);
     }
 }
+
+export const deleteRedZone = async (redzoneId: string): Promise<void> => {
+    try {
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+        const response = await api.delete(`/${redzoneId}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error('Erro ao excluir redzone');
+        }
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao excluir redzone');
+    }
+};

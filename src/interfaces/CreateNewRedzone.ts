@@ -1,5 +1,5 @@
 export interface Redzone {
-    id: number,
+    id: string,
     name: string,
     description: string,
     cameraSpot: string,

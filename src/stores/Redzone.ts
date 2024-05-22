@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { Redzone } from "@/interfaces/CreateNewRedzone";
-import { createRedzone, getCurrentRedzone, getRedzone, getRedzonebyId } from "@/utils/services/axiosRedzone";
+import { createRedzone, deleteRedZone, getCurrentRedzone, getRedzone, getRedzonebyId } from "@/utils/services/axiosRedzone";
 
 const RedzoneStore = defineStore('redzone', () => {
     const redzones = ref<Redzone[]>([]);
@@ -45,12 +45,23 @@ const RedzoneStore = defineStore('redzone', () => {
         }
     }
 
+    const deletaRedZone= async (redzoneId: string) => {
+        try {
+            await deleteRedZone(redzoneId);
+            await getAllRedzones();
+        } catch (error) {
+            console.error('Erro ao deletar redzone:', error);
+            throw error;
+        }
+    };
+
     return {
         redzones,
         create,
         fetchCurrentRedzone,
         findByIdRedzone,
-        getAllRedzones 
+        getAllRedzones,
+        deletaRedZone
 
     };
 

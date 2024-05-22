@@ -16,7 +16,7 @@
         <div class="table-column">{{ redzone.description }}</div>
         <div class="table-column">{{ redzone.personLimit }}</div>
         <div class="table-column">
-          <span class="pi pi-times delete-icon"></span>
+          <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
           <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png"/> </span>
         </div>
       </div>
@@ -46,7 +46,7 @@ import {ref, computed, onMounted} from 'vue';
 import 'primeicons/primeicons.css';
 import type { Redzone } from '@/interfaces/CreateNewRedzone';
 import RedzoneStore from '../stores/Redzone';
-
+import { avisoDeletar } from '../plugins/sweetalert';
 
 
 const currentPage = ref(1);
@@ -60,7 +60,7 @@ const fetchRedzones = async () => {
     await registroRedzone.getAllRedzones();
     redzoneDados.value = registroRedzone.redzones;
   } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
+    console.error('Erro ao buscar redzones:', error);
   }
 };
 
@@ -89,6 +89,18 @@ if (currentPage.value < totalPages.value) {
 }
 }
 
+const deleteRedZone = async (redzoneId: string) => {
+  const result = await avisoDeletar();
+  if (result.isConfirmed) {
+    try {
+      console.log(redzoneId);
+      await registroRedzone.deletaRedZone(redzoneId);
+      fetchRedzones(); 
+    } catch (error) {
+      console.error('Erro ao excluir redzone:', error);
+    }
+  }
+}
 
 </script>
 
