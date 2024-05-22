@@ -1,24 +1,31 @@
 <template>
-    <div class="title-ocorrencias">
-        <p>Editar Área</p>
-    </div>
-    <UserBox background_color="blue_color">
-        <div class="Input-Texts">
-            <div class="input-container">
-                <InputText type="text" v-model="areaData.name" placeholder="Nome" />
-            </div>
-            <div class="input-container">
-                <InputText type="text" v-model="areaData.description" placeholder="Descrição" />
-            </div>
-            <div class="input-container">
-                <MultiSelect v-model="selectedRedZones" :options="areaData.redZones" optionLabel="name" placeholder="Select Red Zones" class="w-full md:w-20rem" />
-            </div>
-        </div>
-        <div class="Register-Button">
-            <Button label="Voltar" class="button-edit" severity="contrast" @click="submitVoltar"></Button>
-            <Button label="Editar" class="button-edit" severity="contrast" @click="submitPutForm"></Button>
-        </div>
-    </UserBox>
+  <div class="title-ocorrencias">
+      <p>Editar Área</p>
+  </div>
+  <UserBox background_color="blue_color">
+      <div class="Input-Texts">
+          <div class="input-container">
+              <InputText type="text" v-model="areaData.name" placeholder="Nome" />
+          </div>
+          <div class="input-container">
+              <InputText type="text" v-model="areaData.description" placeholder="Descrição" />
+          </div>
+          <div class="input-container">
+            <MultiSelect 
+          v-model="selectedRedZones" 
+          :options="areaData.redZones" 
+          optionLabel="name" 
+          placeholder="Redzones Selecionadas" 
+          class="w-full md:w-20rem" 
+          :show="showAllRedZones"
+        />
+          </div>
+      </div>
+      <div class="Register-Button">
+          <Button label="Voltar" class="button-edit" severity="contrast" @click="submitVoltar"></Button>
+          <Button label="Editar" class="button-edit" severity="contrast" @click="submitPutForm"></Button>
+      </div>
+  </UserBox>
 </template>
 
 <script setup>
@@ -38,50 +45,52 @@ const route = useRoute();
 const areaId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 
 const areaData = ref({
-  name: '',
-  description: '',
-  responsibleManager: 'Gerente Responsável',
-  user: {
-    id: ''
-  },
-  redZones: [] 
+name: '',
+description: '',
+responsibleManager: 'Gerente Responsável',
+user: {
+  id: ''
+},
+redZones: []
 });
 
 const selectedRedZones = ref([]);
 
 async function getArea() {
-  try {
-    const response = await findByIdArea(areaId);
-    areaData.value = { ...response }; 
-    selectedRedZones.value = areaData.value.redZones.map(redZone => redZone.id);
-  } catch (error) {
-    console.log('Erro ao buscar informações do usuário:', error);
-  }
+try {
+  const response = await findByIdArea(areaId);
+  areaData.value = { ...response };
+  selectedRedZones.value = [...areaData.value.redZones];
+} catch (error) {
+  console.log('Erro ao buscar informações do usuário:', error);
 }
+}
+
 onMounted(async () => {
-  await getArea();
+await getArea();
 });
 
 async function submitPutForm() {
-  const result = await avisoEditar();
-  if (result.isConfirmed) {
-    try {
-      const updatedRedZones = areaData.value.redZones.filter(redZone => selectedRedZones.value.includes(redZone.id));
-      areaData.value.redZones = updatedRedZones;
-        console.log(areaData.value);
-      await putArea(areaId, areaData.value);
-      router.push("/areaList");
-    } catch (error) {
-      console.error('Erro ao editar área:', error);
-    }
+const result = await avisoEditar();
+if (result.isConfirmed) {
+  try {
+    const updatedRedZones = selectedRedZones.value.map(selectedZone => {
+      return areaData.value.redZones.find(zone => zone.id === selectedZone.id);
+    });
+    areaData.value.redZones = updatedRedZones;
+    await putArea(areaId, areaData.value);
+    router.push("/areaList");
+  } catch (error) {
+    console.error('Erro ao editar área:', error);
   }
+}
 }
 
 async function submitVoltar() {
-  const result = await avisoVoltar();
-  if (result.isConfirmed) {
-    router.push("/areaList");
-  }
+const result = await avisoVoltar();
+if (result.isConfirmed) {
+  router.push("/areaList");
+}
 }
 </script>
 
