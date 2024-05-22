@@ -23,7 +23,6 @@
   text-align: center;
   display: flex;
   align-items: center;
-  position: relative; /* Fixe o footer na parte inferior da tela */
   bottom: 0; /* Alinhe o footer na parte inferior da tela */
 }
 

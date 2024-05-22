@@ -24,11 +24,25 @@
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
-import UsuarioStore from '../stores/Usuario';
+import { ref } from 'vue';
+import type { UsuarioPefil } from "../interfaces/User";
 
-const registroUser = UsuarioStore();
-const currentUser = registroUser.users[0];
+const currentUser = ref<UsuarioPefil>({
+  name: '',
+  email: '',
+  function: '',
+  surname: ''
+});
 
+const loadUserFromLocalStorage = () => {
+  const userStr = localStorage.getItem('currentUser');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    Object.assign(currentUser.value, user);
+  }
+};
+
+loadUserFromLocalStorage();
 </script>
 
 <style scoped>

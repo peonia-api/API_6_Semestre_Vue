@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {RegisterRoute, PainelRoute } from './RegisterRoute';
+import {PainelRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
 import { ListRedzoneRoute, RedzoneRegisterRoute } from "./RedzoneRoute";
+import { AreaRoute, RegistrationAreaRoute, EditArea } from "./AreaRoute";
 
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     LoginRoute,
-    RegisterRoute,
     PainelRoute,
     UserRoute,
     RegistrationRoute,
@@ -18,6 +18,9 @@ const router = createRouter({
     EditUser,
     RedzoneRegisterRoute,
     ListRedzoneRoute
+    AreaRoute,
+    RegistrationAreaRoute,
+    EditArea
   ],
   scrollBehavior() {
     return { top: 0 };

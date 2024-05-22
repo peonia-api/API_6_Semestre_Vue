@@ -26,6 +26,19 @@ export async function avisoDeletar(): Promise<SweetAlertResult> {
       cancelButtonText: "Cancelar",
     });
   }
+  export async function avisoDeletarArea(): Promise<SweetAlertResult> {
+    return Swal.fire({
+      title: "Deletar área",
+      text: "Esta ação não pode ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar",
+      cancelButtonText: "Cancelar",
+    });
+  }
+
 
   export async function avisoVoltar(): Promise<SweetAlertResult> {
     return Swal.fire({
