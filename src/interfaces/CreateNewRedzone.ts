@@ -3,10 +3,11 @@ export interface Redzone {
     name: string,
     description: string,
     cameraSpot: string,
-    personLimit: number
+    personLimit: number,
+    responsibleGuard: string,
 }
 
-export interface NewRedzone {
+export interface CreateNewRedzone {
       redzone: Redzone[];
 }
 

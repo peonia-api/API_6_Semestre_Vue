@@ -1,10 +1,29 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { Redzone } from "@/interfaces/CreateNewRedzone";
-import { createRedzone, getRedzone } from "@/utils/services/axiosRedzone";
+import { createRedzone, getCurrentRedzone, getRedzone, getRedzonebyId } from "@/utils/services/axiosRedzone";
 
 const RedzoneStore = defineStore('redzone', () => {
     const redzones = ref<Redzone[]>([]);
+  
+        const fetchCurrentRedzone = async () => {
+            try {
+                const currentRedzone = await getCurrentRedzone();
+                redzones.value = [currentRedzone];
+            } catch (error: unknown) {
+                console.error('Erro ao buscar redzone atual:', error);
+            }
+        };
+
+        const findByIdRedzone = async (redzoneId: string) => {
+            try {
+                const res = await getRedzonebyId(redzoneId);
+                return res;   
+            } catch (error) {
+                console.error('Erro ao buscar redzone por ID:', error);
+                throw error;
+            }
+        };
 
     const create = async (redzone: Redzone) => {
         try {
@@ -28,8 +47,12 @@ const RedzoneStore = defineStore('redzone', () => {
 
     return {
         redzones,
-        create
-    }
+        create,
+        fetchCurrentRedzone,
+        findByIdRedzone,
+        getAllRedzones 
+
+    };
 
 });
 

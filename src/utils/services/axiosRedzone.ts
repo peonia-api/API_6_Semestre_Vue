@@ -3,7 +3,7 @@ import type { Redzone } from "@/interfaces/CreateNewRedzone";
 import type RequestParams from "@/interfaces/RequestParams";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/redzone'
+    baseURL: 'http://localhost:8080/redZones'
 });
 
 
@@ -26,3 +26,43 @@ export const getRedzone = async (route: string, query: RequestParams<unknown> | 
         throw (error as AxiosError);
     }
 };
+
+export const getRedzonebyId = async (redzoneId: string) => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+        const response = await api.get(`/${redzoneId}`, {
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        if (response.status !== 200) {
+            throw new Error('Erro ao obter redzone por ID');
+        }
+
+        return response.data; 
+    } catch (error) {
+        throw new Error((error as AxiosError).message || 'Erro ao obter redzone por ID');
+    }
+}
+
+export const getCurrentRedzone = async (): Promise<Redzone> => {
+    try {
+        const token = localStorage.getItem('token');
+    
+        if (!token) {
+            throw new Error('Token não encontrado.');
+        }
+
+        const response = await api.get<{ redzone: Redzone }>(`/current-redzone`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response.data.redzone;
+    } catch (error) {
+        throw (error as AxiosError);
+    }
+}
