@@ -17,7 +17,7 @@ const router = createRouter({
     PerfilRoute,
     EditUser,
     RedzoneRegisterRoute,
-    ListRedzoneRoute
+    ListRedzoneRoute,
     AreaRoute,
     RegistrationAreaRoute,
     EditArea
