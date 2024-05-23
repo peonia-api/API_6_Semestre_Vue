@@ -1,5 +1,6 @@
 import RedzoneRegistration from "@/views/RedzoneRegistration.vue";
 import RedzoneListing from "@/views/RedzoneListing.vue";
+import RedzoneEdit from "@/views/RedzoneEdit.vue";
 
  export const RedzoneRegisterRoute = {
     path: '/redzoneregistration',
@@ -11,4 +12,9 @@ import RedzoneListing from "@/views/RedzoneListing.vue";
     path: '/redzoneList',
     name: 'RedzoneListing',
     component: RedzoneListing
+};
+export const EditRedzoneRoute = {
+   path: '/editRedzone/:id',
+   name: 'RedzoneEdit',
+   component: RedzoneEdit
 };

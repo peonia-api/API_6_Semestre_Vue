@@ -1,55 +1,39 @@
 <template>
-  <div class="table">
-    <div class="table-header">
-      <div class="table-row">
-        <div class="table-column">Red Zone</div>
-        <div class="table-column">Área</div>
-        <div class="table-column">Responsável</div>
-        <div class="table-column">Cap. Máxima</div>
-        <div class="table-column">Opções</div>
-      </div>
-    </div> 
-    <div class="table-body">
-      <div class="table-row" v-for="(redzone) in displayedRedzones" :key="redzone.id">
-        <div class="table-column">{{ redzone.name }}</div>
-        <div class="table-column">{{ redzone.area.name }}</div>
-        <div class="table-column">{{ redzone.responsibleGuard}}</div>
-        <div class="table-column">{{ redzone.personLimit }}</div>
-        <div class="table-column">
+  <div class="collapsible-container">
+    <details v-for="(redzone, index) in displayedRedzones" :key="index">
+      <summary class="collapsible-title">{{ redzone.name }}</summary>
+      <div class="collapsible-content">
+        <p>Área: {{ redzone.area.name }}</p>
+        <p>Responsável: {{ redzone.responsibleGuard }}</p>
+        <p>Cap. Máxima: {{ redzone.personLimit }}</p>
+        <div>
           <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
-          <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png"/> </span>
+          <span class="edit-icon">
+            <span  class="edit-icon" ><img @click="router.push(`/editRedzone/${redzone.id}`)" src="../assets/icons/iconEdit.png"/> </span>
+          </span>
         </div>
       </div>
-    </div>
+    </details>
   </div>
 
-
-<div class="pagination">
-  <div>
-    <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">
-      <p>ANTERIOR</p>
-    </button>
-  </div>
-  <div>
+  <div class="pagination">
+    <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">ANTERIOR</button>
     <p class="page-number">{{ currentPage }}</p>
+    <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">PRÓXIMO</button>
   </div>
-  <div>
-    <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">
-      <p>PRÓXIMO</p>
-    </button>
-  </div>
-</div>  
 </template>
 
 <script setup lang="ts">
 import {ref, computed, onMounted, watch} from 'vue';
 import 'primeicons/primeicons.css';
-import type { Redzone } from '@/interfaces/CreateNewRedzone';
+import type { Redzone } from '../interfaces/CreateNewRedzone';
 import RedzoneStore from '../stores/Redzone';
 import { avisoDeletarRedZone } from '../plugins/sweetalert';
 import type { Area, TransformedRedZone } from '../interfaces/Area';
 import AreaStore from '../stores/Area';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 
 const currentPage = ref(1);
 const redzoneDados = ref<Redzone[]>([]);
@@ -224,5 +208,37 @@ font-size: 12px;
 
 .button-pagination:hover {
 background-color: #588ec4;
+}
+
+.collapsible-container details {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.collapsible-container summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px;
+  user-select: none;
+}
+
+.collapsible-content {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.collapsible-content > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collapsible-content p {
+  margin: 5px 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="title-redzones">
-    <p>Cadastro de Redzones</p>
+    <p>Edição de Redzones</p>
   </div>
   <UserBox background_color="white_color" class="box_style">
     <div class="Input-Texts">
@@ -29,18 +29,17 @@
         <label for="id-guard">Guarda</label>
       </FloatLabel>
 
-      <FloatLabel class="field" style="margin-top: 10px">
-        <InputNumber class="input-field" id="capmaximaredzone" v-model="redzoneData.personLimit" />
+      <FloatLabel class="field">
+        <InputNumber class="input-field" style="margin-top: 10px" id="capmaximaredzone" v-model="redzoneData.personLimit" />
         <label for="capmaximaredzone">Capacidade Máxima</label>
       </FloatLabel>
 
       <div class="Register-Button">
-        <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
+        <Button label="Atualizar" severity="contrast" @click="submitForm"></Button>
       </div>
     </div>
   </UserBox>
 </template>
-
 
 <script setup lang="ts">
 import UserBox from '../components/UserBox.vue';
@@ -50,7 +49,7 @@ import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 
 import RedzoneStore from '../stores/Redzone';
@@ -61,9 +60,11 @@ import type { Area } from '../interfaces/Area';
 import type { Usuario } from "../interfaces/User";
 
 const router = useRouter();
-const { create } = RedzoneStore();
+const route = useRoute();
+const { putRedzone, findByIdRedzone } = RedzoneStore();
 const registroUser = UsuarioStore();
 
+const redzoneId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 
 const redzoneData = ref({
   id: '',
@@ -75,8 +76,6 @@ const redzoneData = ref({
   area: { id: '' },
   user: { id: '' }
 });
-
-console.log(redzoneData.value);
 
 const areasDados = ref<Area[]>([]);
 const usersDados = ref<Usuario[]>([]);
@@ -90,9 +89,7 @@ const fetchUsers = async () => {
   try {
     await registroUser.getAllUsers();
     usersDados.value = registroUser.users;
-
-    
-    filteredGuards.value = usersDados.value.filter(user => user.permissionType === 'ROLE_GUARD');
+    filteredGuards.value = usersDados.value.filter(user => user.permissionType === 'ROLE_GUARD');   
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
   }
@@ -107,30 +104,34 @@ const fetchAreas = async () => {
   }
 };
 
-onMounted(() => {
-  fetchUsers();
-  fetchAreas();
+const fetchRedzone = async () => {
+  try {
+    const redzone = await findByIdRedzone(redzoneId);
+    redzoneData.value = redzone;
+
+    console.log('areasDados:', areasDados.value);
+    console.log('filteredGuards:', filteredGuards.value);
+    console.log('redzone:', redzoneData.value);
+  } catch (error) {
+    console.error('Erro ao buscar Redzone:', error);
+  }
+};
+
+onMounted(async () => {
+ fetchUsers(),
+ fetchAreas(),
+ fetchRedzone()
 });
 
-
 const submitForm = async () => {
-  if (selectedArea.value) {
-    redzoneData.value.area.id = selectedArea.value.id;
-  }
-  if (selectedGuard.value) {
-    redzoneData.value.user.id = selectedGuard.value.id;
-  }
-
   try {
-    await create(redzoneData.value);
+    await putRedzone(redzoneData.value)
     router.push("/redzoneList");
   } catch (error) {
-    console.error('Erro ao criar Redzone:', error);
+    console.error('Erro ao editar Redzone:', error);
   }
 };
 </script>
-
-
 
 <style scoped>
 .title-redzones {
