@@ -1,42 +1,24 @@
 <template>
-    <div class="table">
-        <div class="table-header">
-            <div class="table-row">
-                <div class="table-column">Área</div>
-                <div class="table-column">Red zones</div>
-                <div class="table-column">Responsável</div>
-                <div class="table-column">Ações</div>
-            </div>
+    <div class="area-container">
+      <div class="area-box" v-for="(area) in displayedAreas" :key="area.id">
+        <div class="area-info">
+          <div class="area-title">{{ area.name }}</div>
+          <div class="area-redzones">
+            <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
+          </div>
+          <div class="area-responsible">{{ area.user.name }}</div>
         </div>
-        <div class="table-row" v-for="(area) in displayedAreas" :key="area.id">
-            <div class="table-column">{{ area.name }}</div>
-            <div class="table-column">
-                <div v-for="redZone in area.redZones" :key="redZone.id">
-                    {{ redZone.name }}
-                </div>
-            </div>
-            <div class="table-column">{{ area.user.name }}</div>
-            <div class="table-column">
-                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
-                <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/${area.id}`)"/> </span>
-            </div>
+        <div class="area-actions">
+          <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+          <span class="edit-icon"><img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/${area.id}`)"/></span>
         </div>
+      </div>
     </div>
-
+  
     <div class="pagination">
-        <div>
-            <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">
-                <p>ANTERIOR</p>
-            </button>
-        </div>
-        <div>
-            <p class="page-number">{{ currentPage }}</p>
-        </div>
-        <div>
-            <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">
-                <p>PRÓXIMO</p>
-            </button>
-        </div>
+      <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1"><p>ANTERIOR</p></button>
+      <p class="page-number">{{ currentPage }}</p>
+      <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages"><p>PRÓXIMO</p></button>
     </div>
 </template>
 
@@ -199,5 +181,69 @@ const deleteArea = async (areaId: string) => {
 
 .button-pagination:hover {
     background-color: #588ec4;
+}
+
+.area-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.area-box {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 30%;
+    margin: 10px;
+    padding: 20px;
+    position: relative;
+}
+
+.area-info {
+    margin-bottom: 20px;
+}
+
+.area-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.area-redzones {
+    font-size: 16px;
+    color: #666;
+}
+
+.area-responsible {
+    font-size: 16px;
+    color: #666;
+}
+
+.area-actions {
+    position: absolute;
+    right: 10px;
+    top: 30px;
+}
+
+.edit-icon img {
+    width: 25px;
+    height: 25px;
+    transition: transform 0.3s ease;
+}
+
+.edit-icon img:hover {
+    transform: scale(1.1);
+}
+
+.delete-icon {
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.8rem;
+    color: red;
+}
+
+.delete-icon:hover {
+    color: darkred;
 }
 </style>
