@@ -1,5 +1,8 @@
 <template>
-  <UserBox background_color="blue_color">
+  <div class="title-cadastro-usuario">
+    <p>Cadastro de Usuario</p>
+  </div>
+  <UserBox background_color="white_color">
     <div class="Input-Texts">
       <div class="input-container">
         <InputText type="text" v-model="userData.name" placeholder="Nome" />
@@ -69,10 +72,24 @@ const submitForm = async () => {
 };
 </script>
 
-
-
-
 <style scoped>
+
+.title-cadastro-usuario {
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.title-cadastro-usuario p {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.Register-Button {
+  text-align: center;
+  margin-top: -10px;
+}
 .send-image {
   width: 100%;
   display: flex;

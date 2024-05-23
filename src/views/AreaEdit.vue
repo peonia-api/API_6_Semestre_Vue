@@ -1,8 +1,8 @@
 <template>
-  <div class="title-ocorrencias">
+  <div class="title-edit-area">
       <p>Editar Área</p>
   </div>
-  <UserBox background_color="blue_color">
+  <UserBox background_color="white_color">
       <div class="Input-Texts">
           <div class="input-container">
               <InputText type="text" v-model="areaData.name" placeholder="Nome" />
@@ -97,6 +97,18 @@ if (result.isConfirmed) {
 
 
 <style scoped>
+.title-edit-area {
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.title-edit-area p {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
 .send-image {
     width: 100%;
     display: flex;

@@ -1,8 +1,8 @@
 <template>
-  <div class="title-ocorrencias">
-    <p>Editar Usuario</p>
+  <div class="title-edit-usuario">
+    <p>Edição de Usuario</p>
   </div>
-  <UserBox background_color="blue_color">
+  <UserBox background_color="white_color">
     <div class="Input-Texts">
       <div class="input-container">
         <InputText type="text" v-model="userData.name" placeholder="Nome" />
@@ -85,6 +85,17 @@ async function submitVoltar() {
   
 
 <style scoped>
+.title-edit-usuario {
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.title-edit-usuario p {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
 .send-image {
   width: 100%;
   display: flex;

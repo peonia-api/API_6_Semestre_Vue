@@ -1,7 +1,7 @@
 <template>
-  <UserBox background_color="blue_color">
+  <UserBox background_color="white_color">
     <div class="send-image">
-      <img src="@/assets/icons/Avatar_Icon.png" alt="Inserir foto de perfil" />
+      <img src="@/assets/icons/Avatar_Icon_Black.png" alt="Inserir foto de perfil" />
     </div>
     <div class="Input-Texts">
       <div class="input-container">

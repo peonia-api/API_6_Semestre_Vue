@@ -1,5 +1,8 @@
 <template>
-  <UserBox background_color="blue_color">
+  <div class="title-area-cadastro">
+    <p>Cadastro de Área</p>
+  </div>
+  <UserBox background_color="white_color">
     <div class="Input-Texts">
       <div class="input-container">
         <InputText type="text" v-model="userArea.name" placeholder="Nome" />
@@ -72,6 +75,18 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
+.title-area-cadastro {
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.title-area-cadastro p {
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
 .send-image {
     width: 100%;
     display: flex;
