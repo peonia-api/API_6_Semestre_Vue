@@ -4,6 +4,7 @@
   </div>
   <UserBox background_color="white_color">
     <div class="Input-Texts">
+      <div v-if="hasError && !emailError" class="error-message">{{ errorMessage }}</div>
       <div class="input-container">
         <InputText type="text" v-model="userData.name" placeholder="Nome" />
       </div>
@@ -21,8 +22,9 @@
           <option value="ROLE_GUARD">Guarda</option>
         </select>
       </div>
-      <div class="input-container">
-        <InputText type="text" v-model="userData.email" placeholder="Usuário" />
+      <div v-if="emailError" class="error-message">{{ errorMessage }}</div>
+      <div :class="{ 'input-error': emailError, 'input-container': true }">
+        <InputText type="text" v-model="userData.email" placeholder="Usuário" :class="{ 'error-input': emailError }" />
       </div>
       <div class="input-container">
         <InputText type="password" v-model="userData.password" placeholder="Senha" />
@@ -33,7 +35,6 @@
     </div>
   </UserBox>
 </template>
-
 
 <script setup>
 import InputText from 'primevue/inputtext';
@@ -56,24 +57,37 @@ const userData = ref({
   password: ''
 });
 
+const emailError = ref(false);
+const hasError = ref(false);
+const errorMessage = ref('');
+
 const submitForm = async () => {
   try {
+    hasError.value = false;
+    errorMessage.value = '';
+    emailError.value = false;
+
     if (!userData.value.name || !userData.value.surname || !userData.value.email || !userData.value.function || !userData.value.password || !userData.value.permissionType) {
       throw new Error('Todos os campos são obrigatórios');
     }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(userData.value.email)) {
+      emailError.value = true;
+      throw new Error('Email inválido. O campo deve conter @ e .com');
+    }
+
     const newUser = { ...userData.value };
-    console.log(newUser);
-    console.log(newUser);
     await create(newUser);
     router.push("/userList");
   } catch (error) {
-    console.error(error.message);
+    hasError.value = true;
+    errorMessage.value = error.message;
   }
 };
 </script>
 
 <style scoped>
-
 .title-cadastro-usuario {
   font-size: 27px;
   font-weight: bold;
@@ -88,8 +102,9 @@ const submitForm = async () => {
 
 .Register-Button {
   text-align: center;
-  margin-top: -10px;
+  margin-top: 20px;
 }
+
 .send-image {
   width: 100%;
   display: flex;
@@ -107,33 +122,57 @@ const submitForm = async () => {
 .Input-Texts {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  align-items: center;
+  margin-top: -20px;
+  position:relative  
 }
 
 .input-container {
-  margin-bottom: 20px;
+  margin-bottom: 15px; 
+  position: relative;
+  width: 250px;
+  display: flex;
+  justify-content: center;
 }
+
 
 .input-text {
   width: 80%;
 }
-.input-container {
-  margin-bottom: 20px;
-}
 
 .input-container select {
-  width: 100%;
   padding: 8px;
   border-radius: 6px; 
   border: 1px solid #ccc; 
   font-family: inherit;
   font-size: medium;
   color: #334155;
+  width: 250px;
 }
 
 .input-container select:focus {
   outline: none; 
 }
 
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  text-align: center;
+}
 
+.email-error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+
+.error-input {
+  border-color: red;
+}
+
+.input-error {
+  display: flex;
+  flex-direction: column;
+}
 </style>
