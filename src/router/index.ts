@@ -3,7 +3,7 @@ import {PainelRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
 import LoginRoute from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
-import { ListRedzoneRoute, RedzoneRegisterRoute } from "./RedzoneRoute";
+import { ListRedzoneRoute, RedzoneRegisterRoute, EditRedzoneRoute } from "./RedzoneRoute";
 import { AreaRoute, RegistrationAreaRoute, EditArea } from "./AreaRoute";
 
 
@@ -20,6 +20,7 @@ const router = createRouter({
     ListRedzoneRoute,
     AreaRoute,
     RegistrationAreaRoute,
+    EditRedzoneRoute,
     EditArea
   ],
   scrollBehavior() {

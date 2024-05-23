@@ -9,7 +9,7 @@
         <div>
           <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
           <span class="edit-icon">
-            <img src="../assets/icons/iconEdit.png" @click="router.push(`/editRedzone/${redzone.id}`)"/>
+            <span  class="edit-icon" ><img @click="router.push(`/editRedzone/${redzone.id}`)" src="../assets/icons/iconEdit.png"/> </span>
           </span>
         </div>
       </div>
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import {ref, computed, onMounted, watch} from 'vue';
 import 'primeicons/primeicons.css';
-import type { Redzone } from '@/interfaces/CreateNewRedzone';
+import type { Redzone } from '../interfaces/CreateNewRedzone';
 import RedzoneStore from '../stores/Redzone';
 import { avisoDeletarRedZone } from '../plugins/sweetalert';
 import type { Area, TransformedRedZone } from '../interfaces/Area';
