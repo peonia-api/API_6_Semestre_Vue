@@ -7,9 +7,20 @@ const api = axios.create({
 });
 
 
-export const createRedzone = async (redzone: Redzone): Promise<AxiosResponse<Redzone>> => {
+export const createRedzone = async (redzone: Redzone, query: RequestParams<unknown> | null = null): Promise<AxiosResponse<Redzone>> => {
     try {
-        const response = await api.post<Redzone>('', redzone)
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token de autenticação não encontrado');
+        }
+
+        const response = await api.post<Redzone>('', redzone, {   
+            headers: {
+                Authorization: `Bearer ${token}` 
+            },
+            params: { ...query }
+        })
         return response;
     } catch (error) {
         throw new Error((error as AxiosError).message || 'Erro ao criar redzone');
