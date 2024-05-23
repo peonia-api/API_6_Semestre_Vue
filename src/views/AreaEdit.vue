@@ -11,14 +11,10 @@
               <InputText type="text" v-model="areaData.description" placeholder="Descrição" />
           </div>
           <div class="input-container">
-            <MultiSelect 
-          v-model="selectedRedZones" 
-          :options="areaData.redZones" 
-          optionLabel="name" 
-          placeholder="Redzones Selecionadas" 
-          class="w-full md:w-20rem" 
-          :show="showAllRedZones"
-        />
+            <select class="input-select" v-model="areaData.user.id">
+              <option value="" disabled>Gerente Responsável</option>
+              <option v-for="user in usersRole" :key="user.id" :value="user.id">{{ user.name }}</option>
+            </select>
           </div>
       </div>
       <div class="Register-Button">
@@ -31,66 +27,67 @@
 <script setup>
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-import MultiSelect from 'primevue/multiselect';
 import UserBox from '@/components/UserBox.vue';
 import AreaStore from '../stores/Area';
+import UsuarioStore from '../stores/Usuario';
 import { useRouter, useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { avisoEditar, avisoVoltar } from '../plugins/sweetalert';
 
 const router = useRouter();
 const { findByIdArea, putArea } = AreaStore();
+const registroUser = UsuarioStore();
 const route = useRoute();
-
 const areaId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
-
 const areaData = ref({
-name: '',
-description: '',
-responsibleManager: 'Gerente Responsável',
-user: {
-  id: ''
-},
-redZones: []
+  name: '',
+  description: '',
+  user: {
+    id: ''
+  }
 });
+const usersRole = ref([]);
 
-const selectedRedZones = ref([]);
+const fetchUsers = async () => {
+  try {
+    await registroUser.getAllUsers();
+    usersRole.value = registroUser.users.filter(user => user.permissionType === 'ROLE_MANAGER');
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+  }
+};
 
 async function getArea() {
-try {
-  const response = await findByIdArea(areaId);
-  areaData.value = { ...response };
-  selectedRedZones.value = [...areaData.value.redZones];
-} catch (error) {
-  console.log('Erro ao buscar informações do usuário:', error);
-}
+  try {
+    const response = await findByIdArea(areaId);
+    areaData.value = { ...response };
+  } catch (error) {
+    console.error('Erro ao buscar informações da área:', error);
+  }
 }
 
 onMounted(async () => {
-await getArea();
+  await getArea();
+  fetchUsers();
 });
 
 async function submitPutForm() {
-const result = await avisoEditar();
-if (result.isConfirmed) {
-  try {
-    const updatedRedZones = selectedRedZones.value.map(selectedZone => {
-      return areaData.value.redZones.find(zone => zone.id === selectedZone.id);
-    });
-    areaData.value.redZones = updatedRedZones;
-    await putArea(areaId, areaData.value);
-    router.push("/areaList");
-  } catch (error) {
-    console.error('Erro ao editar área:', error);
+  const result = await avisoEditar();
+  if (result.isConfirmed) {
+    try {
+      await putArea(areaId, areaData.value);
+      router.push("/areaList");
+    } catch (error) {
+      console.error('Erro ao editar área:', error);
+    }
   }
-}
 }
 
 async function submitVoltar() {
-const result = await avisoVoltar();
-if (result.isConfirmed) {
-  router.push("/areaList");
-}
+  const result = await avisoVoltar();
+  if (result.isConfirmed) {
+    router.push("/areaList");
+  }
 }
 </script>
 
