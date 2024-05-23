@@ -24,3 +24,7 @@ export interface Area {
     user: User;
     redZones: RedZone[];
   }
+  
+ export interface TransformedRedZone extends RedZone {
+    area: Omit<Area, 'redZones'>;
+}

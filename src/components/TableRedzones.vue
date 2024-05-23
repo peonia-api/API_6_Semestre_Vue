@@ -12,7 +12,7 @@
     <div class="table-body">
       <div class="table-row" v-for="(redzone) in displayedRedzones" :key="redzone.id">
         <div class="table-column">{{ redzone.name }}</div>
-        <div class="table-column">{{ }}</div>
+        <div class="table-column">{{ redzone.area.name }}</div>
         <div class="table-column">{{ redzone.responsibleGuard}}</div>
         <div class="table-column">{{ redzone.personLimit }}</div>
         <div class="table-column">
@@ -42,17 +42,22 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, onMounted} from 'vue';
+import {ref, computed, onMounted, watch} from 'vue';
 import 'primeicons/primeicons.css';
 import type { Redzone } from '@/interfaces/CreateNewRedzone';
 import RedzoneStore from '../stores/Redzone';
 import { avisoDeletarRedZone } from '../plugins/sweetalert';
+import type { Area, TransformedRedZone } from '../interfaces/Area';
+import AreaStore from '../stores/Area';
 
 
 const currentPage = ref(1);
 const redzoneDados = ref<Redzone[]>([]);
+const areaDados = ref<Area[]>([]);
+const redzoneDadosConverted = ref<TransformedRedZone[]>([]);
 const itemsPerPage = 6;
 const registroRedzone = RedzoneStore();
+const registroAreas = AreaStore();
 
 
 const fetchRedzones = async () => {
@@ -64,16 +69,47 @@ const fetchRedzones = async () => {
   }
 };
 
+
+const fetchAreas = async () => {
+  try {
+    await registroAreas.getAllareas();
+    areaDados.value = registroAreas.areas;
+  } catch (error) {
+    console.error('Erro ao buscar areas:', error);
+  }
+};
+
 onMounted(() => {
-  fetchRedzones();
+  fetchAreas();
 });
+
+
+const transformAreasToRedZones = (areas: Area[]): TransformedRedZone[] => {
+    return areas.flatMap(area => 
+        area.redZones.map(redZone => ({
+            ...redZone,
+            area: {
+                id: area.id,
+                name: area.name,
+                description: area.description,
+                responsibleManager: area.responsibleManager,
+                user: area.user
+            }
+        }))
+    );
+};
+
+watch(areaDados, (newValue) => {
+  const newArea = transformAreasToRedZones (newValue) 
+  redzoneDadosConverted.value = newArea
+})
 
 const totalPages = computed(() => Math.ceil(redzoneDados.value.length / itemsPerPage));
 
 const displayedRedzones = computed(() => {
 const startIndex = (currentPage.value - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
-return redzoneDados.value.slice(startIndex, endIndex);
+return redzoneDadosConverted.value.slice(startIndex, endIndex);
 });  
 
 const prevPage = () => {

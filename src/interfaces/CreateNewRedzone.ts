@@ -1,3 +1,5 @@
+import type { Area } from "./Area";
+
 export interface Redzone {
     id: string,
     name: string,
@@ -5,6 +7,7 @@ export interface Redzone {
     cameraSpot: string,
     personLimit: number,
     responsibleGuard: string,
+    area: Area;
 }
 
 export interface CreateNewRedzone {
