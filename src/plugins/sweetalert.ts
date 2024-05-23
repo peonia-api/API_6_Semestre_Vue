@@ -39,6 +39,19 @@ export async function avisoDeletar(): Promise<SweetAlertResult> {
     });
   }
 
+  export async function avisoDeletarRedZone(): Promise<SweetAlertResult> {
+    return Swal.fire({
+      title: "Deletar Redzone",
+      text: "Esta ação não pode ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, deletar",
+      cancelButtonText: "Cancelar",
+    });
+  }
+
 
   export async function avisoVoltar(): Promise<SweetAlertResult> {
     return Swal.fire({
