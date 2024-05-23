@@ -29,8 +29,8 @@
         <label for="id-guard">Guarda</label>
       </FloatLabel>
 
-      <FloatLabel class="field">
-        <InputNumber class="input-field" style="margin-top: 10px" id="capmaximaredzone" v-model="redzoneData.personLimit" />
+      <FloatLabel class="field" style="margin-top: 10px">
+        <InputNumber class="input-field" id="capmaximaredzone" v-model="redzoneData.personLimit" />
         <label for="capmaximaredzone">Capacidade Máxima</label>
       </FloatLabel>
 
