@@ -46,7 +46,7 @@ import {ref, computed, onMounted} from 'vue';
 import 'primeicons/primeicons.css';
 import type { Redzone } from '@/interfaces/CreateNewRedzone';
 import RedzoneStore from '../stores/Redzone';
-import { avisoDeletar } from '../plugins/sweetalert';
+import { avisoDeletarRedZone } from '../plugins/sweetalert';
 
 
 const currentPage = ref(1);
@@ -90,7 +90,7 @@ if (currentPage.value < totalPages.value) {
 }
 
 const deleteRedZone = async (redzoneId: string) => {
-  const result = await avisoDeletar();
+  const result = await avisoDeletarRedZone();
   if (result.isConfirmed) {
     try {
       console.log(redzoneId);
