@@ -1,84 +1,142 @@
 <template>
   <div class="title-redzones">
     <p>Cadastro de Redzones</p>
-  </div>  
-<UserBox background_color="white_color" class="box_style">
+  </div>
+  <UserBox background_color="white_color" class="box_style">
     <div class="Input-Texts">
-        <FloatLabel class="field">
-           <InputText class="input-field" id="nomeredzone" v-model="redzoneData.name" />
-           <label for="nomeredzone">Nome</label>
-        </FloatLabel>
+      <FloatLabel class="field">
+        <InputText class="input-field" id="nomeredzone" v-model="redzoneData.name" />
+        <label for="nomeredzone">Nome</label>
+      </FloatLabel>
 
-        <FloatLabel class="field">
-           <Dropdown class="DropDown-style" v-model="selectedArea" inputId="id-area" :options="areas" optionLabel="name"/>
-           <label for="id-area">Área</label>
-        </FloatLabel>
+      <FloatLabel class="field">
+        <InputText class="input-field" id="descricao" v-model="redzoneData.description" />
+        <label for="descricao">Descrição</label>
+      </FloatLabel>
 
-        <FloatLabel class="field">
-           <InputText class="input-field" id="responsaveldzone" v-model="value" />
-           <label for="responsavelredzone">Responsável</label>
-        </FloatLabel>
+      <FloatLabel class="field">
+        <InputText class="input-field" id="cameraSpot" v-model="redzoneData.cameraSpot" />
+        <label for="cameraSpot">Localização da câmera(URL)</label>
+      </FloatLabel>
 
-        <FloatLabel class="field">
-           <InputNumber class="input-field" id="capmaximaredzone" v-model="redzoneData.personLimit" />
-           <label for="capmaximaredzone">Capacidade Máxima</label>
-        </FloatLabel>
+      <FloatLabel class="field">
+        <Dropdown class="DropDown-style" v-model="selectedArea" inputId="id-area" :options="areasDados" optionLabel="name"/>
+        <label for="id-area">Área</label>
+      </FloatLabel>
 
-        <FloatLabel class="field">
-           <MultiSelect class="DropDown-style" v-model="redzoneData.responsibleGuard" Id="id-guards" :options="guards" optionLabel="name"/>
-           <label for="id_guards">Guardas</label>
-         </FloatLabel>
+      <FloatLabel class="field">
+        <Dropdown class="DropDown-style" v-model="selectedGuard" inputId="id-guard" :options="filteredGuards" optionLabel="name"/>
+        <label for="id-guard">Guarda</label>
+      </FloatLabel>
+
+      <FloatLabel class="field">
+        <InputNumber class="input-field" style="margin-top: 10px" id="capmaximaredzone" v-model="redzoneData.personLimit" />
+        <label for="capmaximaredzone">Capacidade Máxima</label>
+      </FloatLabel>
 
       <div class="Register-Button">
-         <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
+        <Button label="Cadastrar" severity="contrast" @click="submitForm"></Button>
       </div>
-  </div>
+    </div>
   </UserBox>
- 
 </template>
 
-<script setup>
-import UserBox from '@/components/UserBox.vue';
+
+<script setup lang="ts">
+import UserBox from '../components/UserBox.vue';
 import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import InputNumber from 'primevue/inputnumber';
-import MultiSelect from 'primevue/multiselect';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
 
 import { useRouter } from 'vue-router';
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
 
-import RedzoneStore from '../stores/Redzone.ts'; 
+import RedzoneStore from '../stores/Redzone';
+import UsuarioStore from '../stores/Usuario';
+import AreaStore from '../stores/Area';
+
+import type { Area } from '../interfaces/Area';
+import type { Usuario } from "../interfaces/User";
 
 const router = useRouter();
-const { create } = RedzoneStore(); 
+const { create } = RedzoneStore();
+const registroUser = UsuarioStore();
+
 
 const redzoneData = ref({
+  id: '',
   name: '',
-  personLimit: '',
-  responsibleGuard: ''
+  description: '',
+  cameraSpot: '',
+  personLimit: 0,
+  responsibleGuard: 'Gerente Responsavel',
+  area: { id: '' },
+  user: { id: '' }
+});
+
+console.log(redzoneData.value);
+
+const areasDados = ref<Area[]>([]);
+const usersDados = ref<Usuario[]>([]);
+const selectedArea = ref<Area | null>(null);
+const selectedGuard = ref<Usuario | null>(null);
+const filteredGuards = ref<Usuario[]>([]);
+
+const registroArea = AreaStore();
+
+const fetchUsers = async () => {
+  try {
+    await registroUser.getAllUsers();
+    usersDados.value = registroUser.users;
+
+    
+    filteredGuards.value = usersDados.value.filter(user => user.permissionType === 'ROLE_GUARD');
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+  }
+};
+
+const fetchAreas = async () => {
+  try {
+    await registroArea.getAllareas();
+    areasDados.value = registroArea.areas;
+  } catch (error) {
+    console.error('Erro ao buscar áreas:', error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+  fetchAreas();
 });
 
 
 const submitForm = async () => {
+  if (selectedArea.value) {
+    redzoneData.value.area.id = selectedArea.value.id;
+  }
+  if (selectedGuard.value) {
+    redzoneData.value.user.id = selectedGuard.value.id;
+  }
+
   try {
     await create(redzoneData.value);
-  } catch (error) {
-    console.log(error);
-  } finally {
     router.push("/redzoneList");
+  } catch (error) {
+    console.error('Erro ao criar Redzone:', error);
   }
 };
-
-
 </script>
+
+
 
 <style scoped>
 .title-redzones {
   font-size: 27px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   margin-top: 30px;
 }
 
