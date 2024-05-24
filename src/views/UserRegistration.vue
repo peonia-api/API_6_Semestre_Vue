@@ -24,7 +24,7 @@
       </div>
       <div v-if="emailError" class="error-message">{{ errorMessage }}</div>
       <div :class="{ 'input-error': emailError, 'input-container': true }">
-        <InputText type="text" v-model="userData.email" placeholder="Usuário" :class="{ 'error-input': emailError }" />
+        <InputText type="text" v-model="userData.email" placeholder="Email" :class="{ 'error-input': emailError }" />
       </div>
       <div class="input-container">
         <InputText type="password" v-model="userData.password" placeholder="Senha" />
