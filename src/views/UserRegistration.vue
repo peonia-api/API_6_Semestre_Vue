@@ -12,9 +12,6 @@
         <InputText type="text" v-model="userData.surname" placeholder="Sobrenome" />
       </div>
       <div class="input-container">
-        <InputText type="text" v-model="userData.function" placeholder="Função" />
-      </div>
-      <div class="input-container">
         <select v-model="userData.permissionType">
           <option value="" disabled>Autorizações</option>
           <option value="ROLE_ADMIN">Administrador</option>
@@ -52,7 +49,7 @@ const userData = ref({
   name: '',
   surname: '',
   email: '',
-  function: '',
+  function: 'User',
   permissionType: '',
   password: ''
 });

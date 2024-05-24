@@ -14,7 +14,12 @@
         <InputText type="text" v-model="userData.email" placeholder="Usuário" />
       </div>
       <div class="input-container">
-        <InputText type="text" v-model="userData.function" placeholder="Função" />
+        <select v-model="userData.permissionType">
+          <option value="" disabled>Autorizações</option>
+          <option value="ROLE_ADMIN">Administrador</option>
+          <option value="ROLE_MANAGER">Gerente</option>
+          <option value="ROLE_GUARD">Guarda</option>
+        </select>
       </div>
     </div>
     <div class="Register-Button">
@@ -43,10 +48,12 @@ const userData = ref({
   name: '',
   surname: '',
   email: '',
-  function: '',
+  function: 'User',
   password: '',
-  authorizations: [{ name: 'ROLE_ADMIN' }] 
+  permissionType: ''
 });
+
+
 
 onMounted(async () => {
   await getUser();
@@ -56,7 +63,6 @@ async function getUser() {
   try {
     const response = await findByIdUser(userId);
     userData.value = { ...response }; 
-    console.log('Sucesso ao buscar informações do usuário!');
   } catch (error) {
     console.log('Erro ao buscar informações do usuário:', error);
   }
@@ -66,6 +72,7 @@ async function submitPutForm() {
   const result = await avisoEditar();
   if (result.isConfirmed) {
     try {
+      console.log('Dados enviados para PUT:', userData.value);
       await putUser(userId, userData.value);
       router.push("/userList");
     } catch (error) {
@@ -73,6 +80,7 @@ async function submitPutForm() {
     }
   }
 }
+
 async function submitVoltar() {
   const result = await avisoVoltar();
   if (result.isConfirmed) {
@@ -81,11 +89,10 @@ async function submitVoltar() {
 }
 </script>
 
-
   
 
 <style scoped>
-.title-edit-usuario {
+.title-edit-usuario{
   font-size: 27px;
   font-weight: bold;
   margin-bottom: 10px;
@@ -95,6 +102,10 @@ async function submitVoltar() {
 .title-edit-usuario p {
   margin-bottom: 10px;
   border-bottom: 2px solid #ccc;
+}
+
+.Register-Button {
+  text-align: center;
 }
 .send-image {
   width: 100%;
@@ -122,6 +133,23 @@ async function submitVoltar() {
 
 .input-text {
   width: 80%;
+}
+.input-container {
+  margin-bottom: 20px;
+}
+
+.input-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px; 
+  border: 1px solid #ccc; 
+  font-family: inherit;
+  font-size: medium;
+  color: #334155;
+}
+
+.input-container select:focus {
+  outline: none; 
 }
 
 .button-edit{
