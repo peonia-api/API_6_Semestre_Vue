@@ -1,10 +1,17 @@
 import { defineStore } from "pinia";
 import { createArea, getArea, getAreabyId, putAreabyId, deletaArea } from "../utils/services/axiosArea";
-import type { Area } from "@/interfaces/Area";
+import type { Area, RedZone } from "@/interfaces/Area";
 import { ref } from "vue";
 
 const AreaStore = defineStore('area', () => {
     const areas = ref<Area[]>([]);
+    const selectedAreaRedzones = ref<RedZone[]>([]);
+
+    const setSelectedAreaRedzones = (redzones: RedZone[]) => {
+        selectedAreaRedzones.value = redzones;
+    };
+
+    const getSelectedAreaRedzones = () => selectedAreaRedzones.value;
 
     const getAllareas = async () => {
         try {
@@ -57,6 +64,9 @@ const AreaStore = defineStore('area', () => {
     };
     return {
         areas,
+        selectedAreaRedzones,
+        setSelectedAreaRedzones,
+        getSelectedAreaRedzones,
         getAllareas,
         deleteArea,
         findByIdArea,

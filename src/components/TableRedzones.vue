@@ -3,13 +3,13 @@
     <details v-for="(redzone, index) in displayedRedzones" :key="index">
       <summary class="collapsible-title">{{ redzone.name }}</summary>
       <div class="collapsible-content">
-        <p>Área: {{ redzone.area.name }}</p>
+        <p>Área: {{ redzone.name }}</p>
         <p>Responsável: {{ redzone.responsibleGuard }}</p>
         <p>Cap. Máxima: {{ redzone.personLimit }}</p>
         <div>
           <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
           <span class="edit-icon">
-            <span  class="edit-icon" ><img @click="router.push(`/editRedzone/${redzone.id}`)" src="../assets/icons/iconEdit.png"/> </span>
+            <img src="../assets/icons/iconEdit.png" @click="router.push(`/editRedzone/${redzone.id}`)"/>
           </span>
         </div>
       </div>
@@ -24,104 +24,65 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed, onMounted, watch} from 'vue';
-import 'primeicons/primeicons.css';
-import type { Redzone } from '../interfaces/CreateNewRedzone';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import AreaStore from '../stores/Area';
 import RedzoneStore from '../stores/Redzone';
 import { avisoDeletarRedZone } from '../plugins/sweetalert';
-import type { Area, TransformedRedZone } from '../interfaces/Area';
-import AreaStore from '../stores/Area';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
+const areaStore = AreaStore();
+const redzoneStore = RedzoneStore();
 const router = useRouter();
 
 const currentPage = ref(1);
-const redzoneDados = ref<Redzone[]>([]);
-const areaDados = ref<Area[]>([]);
-const redzoneDadosConverted = ref<TransformedRedZone[]>([]);
 const itemsPerPage = 6;
-const registroRedzone = RedzoneStore();
-const registroAreas = AreaStore();
 
+// Utilizando as redzones da área selecionada, já armazenadas na AreaStore
+const displayedRedzones = computed(() => areaStore.getSelectedAreaRedzones());
 
-const fetchRedzones = async () => {
-  try {
-    await registroRedzone.getAllRedzones();
-    redzoneDados.value = registroRedzone.redzones;
-  } catch (error) {
-    console.error('Erro ao buscar redzones:', error);
-  }
-};
-
-
-const fetchAreas = async () => {
-  try {
-    await registroAreas.getAllareas();
-    areaDados.value = registroAreas.areas;
-  } catch (error) {
-    console.error('Erro ao buscar areas:', error);
-  }
-};
-
-onMounted(() => {
-  fetchAreas();
-});
-
-
-const transformAreasToRedZones = (areas: Area[]): TransformedRedZone[] => {
-    return areas.flatMap(area => 
-        area.redZones.map(redZone => ({
-            ...redZone,
-            area: {
-                id: area.id,
-                name: area.name,
-                description: area.description,
-                responsibleManager: area.responsibleManager,
-                user: area.user
-            }
-        }))
-    );
-};
-
-watch(areaDados, (newValue) => {
-  const newArea = transformAreasToRedZones (newValue) 
-  redzoneDadosConverted.value = newArea
-})
-
-const totalPages = computed(() => Math.ceil(redzoneDados.value.length / itemsPerPage));
-
-const displayedRedzones = computed(() => {
-const startIndex = (currentPage.value - 1) * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
-return redzoneDadosConverted.value.slice(startIndex, endIndex);
-});  
+const totalPages = computed(() => Math.ceil(displayedRedzones.value.length / itemsPerPage));
 
 const prevPage = () => {
-if (currentPage.value > 1) {
-  currentPage.value--;
-}
-}
-
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
 
 const nextPage = () => {
-if (currentPage.value < totalPages.value) {
-  currentPage.value++;
-}
-}
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
 
 const deleteRedZone = async (redzoneId: string) => {
   const result = await avisoDeletarRedZone();
   if (result.isConfirmed) {
     try {
-      console.log(redzoneId);
-      await registroRedzone.deletaRedZone(redzoneId);
-      fetchRedzones(); 
+      await redzoneStore.deletaRedZone(redzoneId);
+      areaStore.setSelectedAreaRedzones(
+        areaStore.getSelectedAreaRedzones().filter(redzone => redzone.id !== redzoneId)
+      );
     } catch (error) {
       console.error('Erro ao excluir redzone:', error);
     }
   }
-}
+};
 
+// const transformAreasToRedZones = (areas: Area[]): TransformedRedZone[] => {
+//     return areas.flatMap(area => 
+//         area.redZones.map(redZone => ({
+//             ...redZone,
+//             area: {
+//                 id: area.id,
+//                 name: area.name,
+//                 description: area.description,
+//                 responsibleManager: area.responsibleManager,
+//                 user: area.user
+//             }
+//         }))
+//     );
+// };
 </script>
 
 <style scoped>

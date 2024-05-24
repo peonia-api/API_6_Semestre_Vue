@@ -1,24 +1,35 @@
 <template>
     <div class="area-container">
-      <div class="area-box" v-for="(area) in displayedAreas" :key="area.id">
-        <div class="area-info">
-          <div class="area-title">{{ area.name }}</div>
-          <div class="area-redzones">
-            <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
-          </div>
-          <div class="area-responsible">{{ area.user.name }}</div>
+        <div class="area-box" v-for="(area) in displayedAreas" :key="area.id">
+            <div class="area-info">
+                <!-- Alteração aqui: passando o objeto 'area' inteiro ao invés de 'area.id' -->
+                <div class="area-title" @click="navigateToRedZones(area)">{{ area.name }}</div>
+                <div class="area-redzones">
+                    <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
+                </div>
+                <div class="area-responsible">{{ area.user.name }}</div>
+            </div>
+            <div class="area-actions">
+                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+                <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
+                        @click="router.push(`/editArea/${area.id}`)" /></span>
+            </div>
+            <div class="area-actions">
+                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+                <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
+                        @click="router.push(`/editArea/${area.id}`)" /></span>
+            </div>
         </div>
-        <div class="area-actions">
-          <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
-          <span class="edit-icon"><img src="../assets/icons/iconEdit.png" @click="router.push(`/editArea/${area.id}`)"/></span>
-        </div>
-      </div>
     </div>
-  
+
     <div class="pagination">
-      <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1"><p>ANTERIOR</p></button>
-      <p class="page-number">{{ currentPage }}</p>
-      <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages"><p>PRÓXIMO</p></button>
+        <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">
+            <p>ANTERIOR</p>
+        </button>
+        <p class="page-number">{{ currentPage }}</p>
+        <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">
+            <p>PRÓXIMO</p>
+        </button>
     </div>
 </template>
 
@@ -38,13 +49,18 @@ const itemsPerPage = 6;
 const registroArea = AreaStore();
 const areasDados = ref<Area[]>([]);
 
+const navigateToRedZones = (area: Area) => {
+    registroArea.setSelectedAreaRedzones(area.redZones);
+    router.push({ name: 'RedzoneListing', params: { areaId: area.id } });
+};
+
 const fetchAreas = async () => {
-  try {
-    await registroArea.getAllareas();
-    areasDados.value = registroArea.areas;
-  } catch (error) {
-    console.error('Erro ao buscar Areas:', error);
-  }
+    try {
+        await registroArea.getAllareas();
+        areasDados.value = registroArea.areas;
+    } catch (error) {
+        console.error('Erro ao buscar Areas:', error);
+    }
 };
 
 onMounted(() => {
@@ -52,9 +68,9 @@ onMounted(() => {
 });
 
 const displayedAreas = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return areasDados.value.slice(startIndex, endIndex);
+    const startIndex = (currentPage.value - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return areasDados.value.slice(startIndex, endIndex);
 });
 
 const totalPages = computed(() => Math.ceil(areasDados.value.length / itemsPerPage));
@@ -70,16 +86,16 @@ const nextPage = () => {
 }
 
 const deleteArea = async (areaId: string) => {
-  const result = await avisoDeletarArea();
-  if (result.isConfirmed) {
-    try {
-      console.log(areaId);
-      await registroArea.deleteArea(areaId);
-      fetchAreas(); 
-    } catch (error) {
-      console.error('Erro ao excluir usuário:', error);
+    const result = await avisoDeletarArea();
+    if (result.isConfirmed) {
+        try {
+            console.log(areaId);
+            await registroArea.deleteArea(areaId);
+            fetchAreas();
+        } catch (error) {
+            console.error('Erro ao excluir área:', error);
+        }
     }
-  }
 }
 
 </script>
@@ -193,7 +209,7 @@ const deleteArea = async (areaId: string) => {
 .area-box {
     background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 30%;
     margin: 10px;
     padding: 20px;
