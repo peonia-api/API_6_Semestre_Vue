@@ -86,6 +86,9 @@ const filteredGuards = ref<Usuario[]>([]);
 
 const registroArea = AreaStore();
 
+console.log(areasDados);
+
+
 const fetchUsers = async () => {
   try {
     await registroUser.getAllUsers();
@@ -101,7 +104,7 @@ const fetchUsers = async () => {
 const fetchAreas = async () => {
   try {
     await registroArea.getAllareas();
-    areasDados.value = registroArea.areas;
+    areasDados.value = registroArea.areas;    
   } catch (error) {
     console.error('Erro ao buscar áreas:', error);
   }
@@ -116,6 +119,7 @@ onMounted(() => {
 const submitForm = async () => {
   if (selectedArea.value) {
     redzoneData.value.area.id = selectedArea.value.id;
+    redzoneData.value.responsibleGuard = selectedArea.value.user.email
   }
   if (selectedGuard.value) {
     redzoneData.value.user.id = selectedGuard.value.id;

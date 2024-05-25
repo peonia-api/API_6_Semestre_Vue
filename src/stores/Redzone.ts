@@ -25,7 +25,7 @@ const RedzoneStore = defineStore('redzone', () => {
             }
         };
 
-    const create = async (redzone: Redzone) => {
+    const create = async (redzone: Redzone | any) => {
         try {
             const res = await createRedzone(redzone);
             redzones.value.unshift(res.data);
