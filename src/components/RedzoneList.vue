@@ -55,6 +55,9 @@ const fetchRedzones = async () => {
     redzonesDados.value = redzoneStore.redzones;
   } catch (error) {
     console.error('Erro ao buscar Redzones:', error);
+    nextTick(() => {
+            window.location.reload()
+        });
   }
 };
 

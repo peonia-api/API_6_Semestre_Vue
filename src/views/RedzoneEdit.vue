@@ -131,6 +131,7 @@ const fetchAreas = async () => {
 };
 
 async function submitPutForm() {
+  redzoneData.value.responsibleGuard = selectedArea.value?.user.email
   const result = await avisoEditar();
   if (result.isConfirmed) {
     try {
