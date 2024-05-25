@@ -20,13 +20,17 @@
       </FloatLabel>
 
       <FloatLabel class="field">
-        <Dropdown class="DropDown-style" v-model="selectedArea" inputId="id-area" :options="areasDados" optionLabel="name"/>
-        <label for="id-area">Área</label>
+        <select class="input-field-select" v-model="selectedArea" id="id-area">
+          <option value="" disabled>Selecione uma Área</option>
+          <option v-for="area in areasDados" :key="area.id" :value="area">{{ area.name }}</option>
+        </select>
       </FloatLabel>
-
+      
       <FloatLabel class="field">
-        <Dropdown class="DropDown-style" v-model="selectedGuard" inputId="id-guard" :options="filteredGuards" optionLabel="name"/>
-        <label for="id-guard">Guarda</label>
+        <select class="input-field-select" v-model="redzoneData.user.name" id="id-guard">
+          <option value="" disabled>Selecione um Guarda</option>
+          <option v-for="guard in filteredGuards" :key="guard.id" :value="guard.name">{{ guard.name }}</option>
+        </select>
       </FloatLabel>
 
       <FloatLabel class="field">
@@ -35,11 +39,13 @@
       </FloatLabel>
 
       <div class="Register-Button">
-        <Button label="Atualizar" severity="contrast" @click="submitForm"></Button>
+          <Button label="Voltar" class="button-edit" severity="contrast" @click="submitVoltar"></Button>
+          <Button label="Editar" class="button-edit" severity="contrast" @click="submitPutForm"></Button>
       </div>
     </div>
   </UserBox>
 </template>
+
 
 <script setup lang="ts">
 import UserBox from '../components/UserBox.vue';
@@ -47,49 +53,69 @@ import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
-import Dropdown from 'primevue/dropdown';
 
-import { useRouter, useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, type Ref } from 'vue';
 
 import RedzoneStore from '../stores/Redzone';
 import UsuarioStore from '../stores/Usuario';
+import type { Usuario } from '../interfaces/User';
 import AreaStore from '../stores/Area';
-
 import type { Area } from '../interfaces/Area';
-import type { Usuario } from "../interfaces/User";
+import { avisoEditar, avisoVoltar } from '../plugins/sweetalert';
 
-const router = useRouter();
 const route = useRoute();
-const { putRedzone, findByIdRedzone } = RedzoneStore();
+const router = useRouter();
+const { findByIdRedzone, putRedzone } = RedzoneStore();
 const registroUser = UsuarioStore();
+const registroArea = AreaStore();
+
+const areasDados = ref<Area[]>([]);
+const usersDados = ref<Usuario[]>([]);
+const filteredGuards: Ref<Usuario[]> = ref([]);
+
 
 const redzoneId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 
-const redzoneData = ref({
+const redzoneData: any= ref({
   id: '',
   name: '',
   description: '',
   cameraSpot: '',
   personLimit: 0,
   responsibleGuard: 'Gerente Responsavel',
-  area: { id: '' },
-  user: { id: '' }
+  user: {
+    id: '',
+    name: '',
+    surname: '',
+    email: '',
+    function: '',
+    permissionType: ''
+  },
+  area: { id: '' }
 });
 
-const areasDados = ref<Area[]>([]);
-const usersDados = ref<Usuario[]>([]);
 const selectedArea = ref<Area | null>(null);
-const selectedGuard = ref<Usuario | null>(null);
-const filteredGuards = ref<Usuario[]>([]);
 
-const registroArea = AreaStore();
+const fetchRedzone = async () => {
+  try {
+    const redzone = await findByIdRedzone(redzoneId);
+    redzoneData.value = redzone;
+
+    const area = areasDados.value.find(area => 
+      area.redZones.some(rz => rz.id === redzone.id)
+    );
+    selectedArea.value = area || null;
+  } catch (error) {
+    console.error('Erro ao buscar Redzone:', error);
+  }
+};
 
 const fetchUsers = async () => {
   try {
     await registroUser.getAllUsers();
     usersDados.value = registroUser.users;
-    filteredGuards.value = usersDados.value.filter(user => user.permissionType === 'ROLE_GUARD');   
+    filteredGuards.value = usersDados.value.filter(user => user.permissionType === 'ROLE_GUARD');
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
   }
@@ -100,38 +126,46 @@ const fetchAreas = async () => {
     await registroArea.getAllareas();
     areasDados.value = registroArea.areas;
   } catch (error) {
-    console.error('Erro ao buscar áreas:', error);
+    console.error('Erro ao buscar Areas:', error);
   }
 };
 
-const fetchRedzone = async () => {
-  try {
-    const redzone = await findByIdRedzone(redzoneId);
-    redzoneData.value = redzone;
-
-    console.log('areasDados:', areasDados.value);
-    console.log('filteredGuards:', filteredGuards.value);
-    console.log('redzone:', redzoneData.value);
-  } catch (error) {
-    console.error('Erro ao buscar Redzone:', error);
+async function submitPutForm() {
+  const result = await avisoEditar();
+  if (result.isConfirmed) {
+    try {
+      const updatedRedzoneData = {
+        ...redzoneData.value,
+        area: { id: selectedArea.value?.id || '' },
+        user: usersDados.value.find(user => user.name === redzoneData.value.user.name) || {}
+      };
+      console.log(redzoneData);
+      
+      await putRedzone(redzoneId, updatedRedzoneData);
+      router.push("/redzoneList");
+    } catch (error) {
+      console.error('Erro ao editar área:', error);
+    }
   }
-};
+}
+
+
+async function submitVoltar() {
+  const result = await avisoVoltar();
+  if (result.isConfirmed) {
+    router.push("/areaList");
+  }
+}
+
 
 onMounted(async () => {
- fetchUsers(),
- fetchAreas(),
- fetchRedzone()
+  await fetchAreas();
+  await fetchUsers();
+  await fetchRedzone();
 });
-
-const submitForm = async () => {
-  try {
-    await putRedzone(redzoneData.value)
-    router.push("/redzoneList");
-  } catch (error) {
-    console.error('Erro ao editar Redzone:', error);
-  }
-};
 </script>
+
+
 
 <style scoped>
 .title-redzones {
@@ -148,7 +182,6 @@ const submitForm = async () => {
 .Input-Texts {
   display: flex;
   flex-direction: column;
-  margin-top: -30px;
 }
 
 .input-container {
@@ -170,16 +203,29 @@ const submitForm = async () => {
 .input-field {
   width: 430px;
 }
+.button-edit{
+  margin: 25px;
+}
 
+.input-field-select {
+  width: 430px;
+  height: 38px;
+  border: 1px solid rgb(185, 185, 185);
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 8px;
+  color: #414040;
+}
 .Register-Button {
   text-align: center;
-  margin-top: -10px;
+  margin-top: -40px;
 }
 
 .box_style {
     border: 2px solid rgb(235, 235, 235);
     width: auto;
     border-radius: 5px;
+    margin-bottom: 50px;
   }
 
   .DropDown-style {
