@@ -1,7 +1,7 @@
 <template>
   <div class="collapsible-container">
     <details v-for="(redzone) in paginatedRedzones" :key="redzone.id">
-      <summary class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
+        <summary v-if="redzone.user.id === idUser || funcao === 'ROLE_ADMIN' || redzone.area.user.email === emailUser" class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
     </details>
   </div>
   <div class="pagination">
@@ -16,6 +16,10 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import RedzoneStore from '../stores/Redzone';
 import type { Redzone } from '../interfaces/CreateNewRedzone';
+
+const idUser = JSON.parse(localStorage.getItem('currentUser') || '').id
+const funcao = JSON.parse(localStorage.getItem('currentUser') || '').permissionType
+const emailUser = JSON.parse(localStorage.getItem('currentUser') || '').email
 
 const redzoneStore = RedzoneStore();
 const router = useRouter();
@@ -53,6 +57,9 @@ const fetchRedzones = async () => {
     console.error('Erro ao buscar Redzones:', error);
   }
 };
+
+console.log(redzonesDados);
+
 
 const navigateToPainel = (redzone: Redzone) => {
   router.push({ name: 'painelView', params: { redzoneName: redzone.name } }).then(() => {
