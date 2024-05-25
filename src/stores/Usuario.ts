@@ -56,7 +56,7 @@ const UsuarioStore = defineStore('usuario', () => {
         }
     };
 
-    const putUser = async (userId: string, userData: Usuario) => {
+    const putUser = async (userId: string, userData: Usuario | any) => {
         try {
             const res = await putUserbyId(userId, userData); 
             return res.data; 

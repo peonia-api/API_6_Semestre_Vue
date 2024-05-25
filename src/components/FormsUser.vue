@@ -10,12 +10,9 @@
       <div class="input-container">
         <InputText type="text" v-model="currentUser.email" placeholder="E-mail" />
       </div>
-      <div class="input-container">
-        <InputText type="text" v-model="currentUser.function" placeholder="Função" />
-      </div>
     </div>
     <div class="Register-Button">
-      <Button label="Atualizar" severity="contrast" />
+      <Button label="Atualizar" severity="contrast" @click="submitPutForm" />
     </div>
   </UserBox>
 </template>
@@ -24,17 +21,23 @@
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { UsuarioPefil } from "../interfaces/User";
+import { avisoEditar } from '@/plugins/sweetalert';
+import UsuarioStore from '@/stores/Usuario';
+
+const { putUser } = UsuarioStore();
 
 const currentUser = ref<UsuarioPefil>({
+  id: '',
   name: '',
   email: '',
   function: '',
   surname: ''
 });
 
-const loadUserFromLocalStorage = () => {
+onMounted(async () => {
+  const loadUserFromLocalStorage = () => {
   const userStr = localStorage.getItem('currentUser');
   if (userStr) {
     const user = JSON.parse(userStr);
@@ -43,6 +46,22 @@ const loadUserFromLocalStorage = () => {
 };
 
 loadUserFromLocalStorage();
+});
+
+
+
+
+async function submitPutForm() {
+  const result = await avisoEditar();
+  if (result.isConfirmed) {
+    try {
+      await putUser(currentUser.value.id, currentUser.value);
+    } catch (error) {
+      console.error('Erro ao editar usuário:', error);
+    }
+  }
+}
+
 </script>
 
 <style scoped>

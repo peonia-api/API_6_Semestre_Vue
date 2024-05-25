@@ -13,6 +13,7 @@ export interface User {
 }
 
 export interface UsuarioPefil {
+    id: string;
     name: string;
     surname: string;
     email: string;
