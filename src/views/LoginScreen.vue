@@ -84,7 +84,7 @@ const handleLogin = async () => {
     loadingPage.value = true
     await login(userValue.value, passwordValue.value);
     await fetchUser().finally(() => {
-      router.push({ name: 'painelView' }).then(() => {
+      router.push({ name: 'painelListRedzones' }).then(() => {
         nextTick(() => {
             window.location.reload()
         });

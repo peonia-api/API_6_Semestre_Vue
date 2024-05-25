@@ -1,21 +1,9 @@
 <template>
   <div class="collapsible-container">
-    <details v-for="(redzone, index) in displayedRedzones" :key="index">
-      <summary class="collapsible-title">{{ redzone.name }}</summary>
-      <div class="collapsible-content">
-        <p>Área: {{ redzone.name }}</p>
-        <p>Responsável: {{ redzone.responsibleGuard }}</p>
-        <p>Cap. Máxima: {{ redzone.personLimit }}</p>
-        <div>
-          <span class="pi pi-times delete-icon" @click="deleteRedZone(redzone.id)"></span>
-          <span class="edit-icon">
-            <img src="../assets/icons/iconEdit.png" @click="router.push(`/editRedzone/${redzone.id}`)"/>
-          </span>
-        </div>
-      </div>
+    <details v-for="(redzone) in paginatedRedzones" :key="redzone.id">
+      <summary class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
     </details>
   </div>
-
   <div class="pagination">
     <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">ANTERIOR</button>
     <p class="page-number">{{ currentPage }}</p>
@@ -24,24 +12,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AreaStore from '../stores/Area';
 import RedzoneStore from '../stores/Redzone';
-import { avisoDeletarRedZone } from '../plugins/sweetalert';
-import { ref } from 'vue';
+import type { Redzone } from '../interfaces/CreateNewRedzone';
 
-const areaStore = AreaStore();
 const redzoneStore = RedzoneStore();
 const router = useRouter();
 
 const currentPage = ref(1);
 const itemsPerPage = 6;
 
-// Utilizando as redzones da área selecionada, já armazenadas na AreaStore
-const displayedRedzones = computed(() => areaStore.getSelectedAreaRedzones());
+const redzonesDados = ref<Redzone[]>([]);
 
-const totalPages = computed(() => Math.ceil(displayedRedzones.value.length / itemsPerPage));
+const totalPages = computed(() => Math.ceil(redzonesDados.value.length / itemsPerPage));
+
+const paginatedRedzones = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return redzonesDados.value.slice(start, end);
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -55,21 +45,30 @@ const nextPage = () => {
   }
 };
 
-const deleteRedZone = async (redzoneId: string) => {
-  const result = await avisoDeletarRedZone();
-  if (result.isConfirmed) {
-    try {
-      await redzoneStore.deletaRedZone(redzoneId);
-      areaStore.setSelectedAreaRedzones(
-        areaStore.getSelectedAreaRedzones().filter(redzone => redzone.id !== redzoneId)
-      );
-    } catch (error) {
-      console.error('Erro ao excluir redzone:', error);
-    }
+const fetchRedzones = async () => {
+  try {
+    await redzoneStore.getAllRedzones();
+    redzonesDados.value = redzoneStore.redzones;
+  } catch (error) {
+    console.error('Erro ao buscar Redzones:', error);
   }
 };
 
+const navigateToPainel = (redzone: Redzone) => {
+  router.push({ name: 'painelView', params: { redzoneName: redzone.name } }).then(() => {
+        nextTick(() => {
+            window.location.reload()
+        });
+      });
+};
+
+onMounted(() => {
+  fetchRedzones();
+});
 </script>
+
+
+
 
 <style scoped>
 .table {
