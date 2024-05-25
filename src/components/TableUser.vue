@@ -3,15 +3,15 @@
     <div class="table-header">
       <div class="table-row">
         <div class="table-column">Nome</div>
-        <div class="table-column">Sobrenome</div>
+        <!-- <div class="table-column">Sobrenome</div> -->
         <div class="table-column">E-mail</div>
-        <div class="table-column">Função</div>
+        <div class="table-column">Autorização</div>
         <div class="table-column">Ações</div>
       </div>
     </div>
     <div class="table-row" v-for="(user) in displayedUsers" :key="user.id">
       <div class="table-column">{{ user.name }}</div>
-      <div class="table-column">{{ user.surname }}</div>
+      <!-- <div class="table-column">{{ user.surname }}</div> -->
       <div class="table-column">{{ user.email }}</div>
       <div class="table-column">{{ translatePermissionType(user.permissionType) }}</div>
       <div class="table-column">
