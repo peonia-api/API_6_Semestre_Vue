@@ -1,23 +1,26 @@
 <template>
     <div class="area-container">
-        <div class="area-box" v-for="(area) in displayedAreas" :key="area.id">
-            <div class="area-info">
+        <div  v-for="(area) in displayedAreas" :key="area.id">
+            <div   class="area-box" v-if="area.user.email === emailUser || funcao === 'ROLE_ADMIN'" >
+                <div   @click="navigateToRedZones(area)" class="area-info">
                 <!-- Alteração aqui: passando o objeto 'area' inteiro ao invés de 'area.id' -->
-                <div class="area-title" @click="navigateToRedZones(area)">{{ area.name }}</div>
-                <div class="area-redzones">
-                    <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
+
+                    <div class="area-title" >{{ area.name }}</div>
+                    <div class="area-redzones">
+                        <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
+                    </div>
+                    <div class="area-responsible">{{ area.user.name }}</div>
                 </div>
-                <div class="area-responsible">{{ area.user.name }}</div>
-            </div>
-            <div class="area-actions">
-                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
-                <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
-                        @click="router.push(`/editArea/${area.id}`)" /></span>
-            </div>
-            <div class="area-actions">
-                <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
-                <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
-                        @click="router.push(`/editArea/${area.id}`)" /></span>
+                <div class="area-actions">
+                    <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+                    <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
+                            @click="router.push(`/editArea/${area.id}`)" /></span>
+                </div>
+                <div class="area-actions">
+                    <span class="pi pi-times delete-icon" @click="deleteArea(area.id)"></span>
+                    <span class="edit-icon"><img src="../assets/icons/iconEdit.png"
+                            @click="router.push(`/editArea/${area.id}`)" /></span>
+                </div>
             </div>
         </div>
     </div>
@@ -40,6 +43,10 @@ import type { Area } from "../interfaces/Area";
 import 'primeicons/primeicons.css'
 import { useRouter } from 'vue-router';
 import { avisoDeletarArea } from '../plugins/sweetalert';
+
+
+const emailUser = JSON.parse(localStorage.getItem('currentUser') || '').email
+const funcao = JSON.parse(localStorage.getItem('currentUser') || '').permissionType
 
 const router = useRouter();
 
@@ -210,7 +217,7 @@ const deleteArea = async (areaId: string) => {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 30%;
+    width: 120%;
     margin: 10px;
     padding: 20px;
     position: relative;
@@ -238,8 +245,8 @@ const deleteArea = async (areaId: string) => {
 
 .area-actions {
     position: absolute;
-    right: 10px;
-    top: 30px;
+    right: 0px;
+    top: 74%;
 }
 
 .edit-icon img {
