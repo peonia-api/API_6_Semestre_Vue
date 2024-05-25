@@ -1,4 +1,4 @@
-import type { Area } from "./Area";
+import type { Area, User } from "./Area";
 
 export interface Redzone {
     id: string,
@@ -8,6 +8,7 @@ export interface Redzone {
     personLimit: number,
     responsibleGuard: string,
     area: Area;
+    user: User
 }
 
 export interface CreateNewRedzone {

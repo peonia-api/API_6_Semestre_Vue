@@ -1,7 +1,7 @@
 <template>
   <div class="collapsible-container">
     <details v-for="(redzone) in paginatedRedzones" :key="redzone.id">
-      <summary class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
+        <summary  class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
     </details>
   </div>
   <div class="pagination">
@@ -16,6 +16,13 @@ import { computed, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import RedzoneStore from '../stores/Redzone';
 import type { Redzone } from '../interfaces/CreateNewRedzone';
+
+const idUser = JSON.parse(localStorage.getItem('currentUser') || '').id
+const funcao = JSON.parse(localStorage.getItem('currentUser') || '').permissionType
+const emailUser = JSON.parse(localStorage.getItem('currentUser') || '').email
+
+console.log(emailUser);
+
 
 const redzoneStore = RedzoneStore();
 const router = useRouter();
@@ -48,11 +55,23 @@ const nextPage = () => {
 const fetchRedzones = async () => {
   try {
     await redzoneStore.getAllRedzones();
-    redzonesDados.value = redzoneStore.redzones;
+    if(funcao === 'ROLE_ADMIN'){
+      redzonesDados.value = redzoneStore.redzones;
+    }
+    else{
+      redzonesDados.value = redzoneStore.redzones.filter((item) => item.responsibleGuard === emailUser || item.user.id === idUser )
+    }
+    //redzonesDados.value = redzoneStore.redzones;
   } catch (error) {
     console.error('Erro ao buscar Redzones:', error);
+    nextTick(() => {
+            window.location.reload()
+        });
   }
 };
+
+console.log(redzonesDados);
+
 
 const navigateToPainel = (redzone: Redzone) => {
   router.push({ name: 'painelView', params: { redzoneName: redzone.name } }).then(() => {

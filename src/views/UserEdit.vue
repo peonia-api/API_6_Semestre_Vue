@@ -7,9 +7,9 @@
       <div class="input-container">
         <InputText type="text" v-model="userData.name" placeholder="Nome" />
       </div>
-      <div class="input-container">
+      <!-- <div class="input-container">
         <InputText type="text" v-model="userData.surname" placeholder="Sobrenome" />
-      </div>
+      </div> -->
       <div class="input-container">
         <InputText type="text" v-model="userData.email" placeholder="Usuário" />
       </div>
@@ -46,7 +46,7 @@ const userId = Array.isArray(route.params.id) ? route.params.id[0] : route.param
 
 const userData = ref({
   name: '',
-  surname: '',
+  surname: 'surname',
   email: '',
   function: 'User',
   password: '',
