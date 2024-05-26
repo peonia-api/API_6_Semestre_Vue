@@ -2,23 +2,18 @@ export interface Usuario {
     id: string;
     name: string;
     surname: string;
-    password: string;
     email: string;
     function: string;
-    authorizations: Authorization[];
-}
-
-export interface Authorization {
-    id: number;
-    name: string;
-}
+    permissionType: string;
+    password: string
+  }
 
 export interface User {
     usuario: Usuario[];
 }
 
-
 export interface UsuarioPefil {
+    id: string;
     name: string;
     surname: string;
     email: string;

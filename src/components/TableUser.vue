@@ -3,20 +3,20 @@
     <div class="table-header">
       <div class="table-row">
         <div class="table-column">Nome</div>
-        <div class="table-column">Sobrenome</div>
+        <!-- <div class="table-column">Sobrenome</div> -->
         <div class="table-column">E-mail</div>
-        <div class="table-column">Função</div>
+        <div class="table-column">Autorização</div>
         <div class="table-column">Ações</div>
       </div>
     </div>
     <div class="table-row" v-for="(user) in displayedUsers" :key="user.id">
       <div class="table-column">{{ user.name }}</div>
-      <div class="table-column">{{ user.surname }}</div>
+      <!-- <div class="table-column">{{ user.surname }}</div> -->
       <div class="table-column">{{ user.email }}</div>
-      <div class="table-column">{{ user.function }}</div>
+      <div class="table-column">{{ translatePermissionType(user.permissionType) }}</div>
       <div class="table-column">
         <span class="pi pi-times delete-icon" @click="deleteUser(user.id)"></span>
-        <span  class="edit-icon" > <img src="../assets/icons/iconEdit.png" @click="router.push(`/editUser/${user.id}`)"/> </span>
+        <span class="edit-icon"><img src="../assets/icons/iconEdit.png" @click="router.push(`/editUser/${user.id}`)" /></span>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
 import { computed, onMounted, ref } from 'vue';
 import UsuarioStore from '../stores/Usuario';
 import type { Usuario } from "../interfaces/User";
-import 'primeicons/primeicons.css'
+import 'primeicons/primeicons.css';
 import { useRouter } from 'vue-router';
 import { avisoDeletar } from '../plugins/sweetalert';
 
@@ -89,7 +89,6 @@ const deleteUser = async (userId: string) => {
   const result = await avisoDeletar();
   if (result.isConfirmed) {
     try {
-      console.log(userId);
       await registroUser.deleteUsuario(userId);
       fetchUsers(); 
     } catch (error) {
@@ -97,7 +96,21 @@ const deleteUser = async (userId: string) => {
     }
   }
 }
+
+const translatePermissionType = (permissionType: string) => {
+  switch (permissionType) {
+    case 'ROLE_ADMIN':
+      return 'Administrador';
+    case 'ROLE_MANAGER':
+      return 'Gerente';
+    case 'ROLE_GUARD':
+      return 'Guarda';
+    default:
+      return permissionType;
+  }
+};
 </script>
+
 
 <style>
 .table {

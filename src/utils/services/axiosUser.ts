@@ -49,6 +49,7 @@ export const createUser = async (usuario: Usuario): Promise<AxiosResponse<Usuari
 }
 
 export const getCurrentUser = async (): Promise<Usuario> => {
+    // eslint-disable-next-line no-useless-catch
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -65,7 +66,7 @@ export const getCurrentUser = async (): Promise<Usuario> => {
     } catch (error) {
         throw error;
     }
-}
+};
 
 export const deleteUser = async (userId: string): Promise<void> => {
     try {

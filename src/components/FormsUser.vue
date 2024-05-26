@@ -1,7 +1,7 @@
 <template>
-  <UserBox background_color="blue_color">
+  <UserBox background_color="white_color">
     <div class="send-image">
-      <img src="@/assets/icons/Avatar_Icon.png" alt="Inserir foto de perfil" />
+      <img src="@/assets/icons/Avatar_Icon_Black.png" alt="Inserir foto de perfil" />
     </div>
     <div class="Input-Texts">
       <div class="input-container">
@@ -10,12 +10,9 @@
       <div class="input-container">
         <InputText type="text" v-model="currentUser.email" placeholder="E-mail" />
       </div>
-      <div class="input-container">
-        <InputText type="text" v-model="currentUser.function" placeholder="Função" />
-      </div>
     </div>
     <div class="Register-Button">
-      <Button label="Atualizar" severity="contrast" />
+      <Button label="Atualizar" severity="contrast" @click="submitPutForm" />
     </div>
   </UserBox>
 </template>
@@ -26,33 +23,45 @@ import Button from 'primevue/button';
 import UserBox from '@/components/UserBox.vue';
 import { onMounted, ref } from 'vue';
 import type { UsuarioPefil } from "../interfaces/User";
-import UsuarioStore from '../stores/Usuario';
+import { avisoEditar } from '@/plugins/sweetalert';
+import UsuarioStore from '@/stores/Usuario';
 
-
-const registroUser = UsuarioStore();
-
+const { putUser } = UsuarioStore();
 
 const currentUser = ref<UsuarioPefil>({
+  id: '',
   name: '',
   email: '',
   function: '',
   surname: ''
 });
 
-const fudeuu= async () => {
-  try {
-    const user = await registroUser.fetchCurrentUser();
-    console.log(user);
-    
-    Object.assign(currentUser.value, user); 
-  } catch (error) {
-    console.error('Erro ao buscar usuário atual:', error);
+onMounted(async () => {
+  const loadUserFromLocalStorage = () => {
+  const userStr = localStorage.getItem('currentUser');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    Object.assign(currentUser.value, user);
   }
 };
 
-onMounted(() => {
-  fudeuu();
+loadUserFromLocalStorage();
 });
+
+
+
+
+async function submitPutForm() {
+  const result = await avisoEditar();
+  if (result.isConfirmed) {
+    try {
+      await putUser(currentUser.value.id, currentUser.value);
+    } catch (error) {
+      console.error('Erro ao editar usuário:', error);
+    }
+  }
+}
+
 </script>
 
 <style scoped>

@@ -14,7 +14,7 @@
       </div>
       <div class="table-column">{{ item.formattedDate }}</div>
       <div class="table-column">{{ item.formattedTime }}</div>
-      <div class="table-column">Laboratório</div>
+      <div class="table-column">{{ item.room }}</div>
     </div>
   </div>
 
@@ -35,7 +35,9 @@ import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
 
+
 const registroRedzone = RegistroStore();
+const filteredRedzones = ref([]);
 
 const data = ref([]);
 const currentPage = ref(1);
@@ -44,21 +46,12 @@ const props = defineProps({
   itemsPerPage: {
     type: Number,
     default: 6
-  }
+  },
+  redzoneName: {
+    type: String
+  },
 });
 
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados;
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-}
-
-onMounted(() => {
-  pegarDados();
-});
 
 const formattedData = computed(() => {
   return data.value.map(item => ({
@@ -93,6 +86,20 @@ watch(formattedData, (newFormattedData) => {
     localStorage.setItem('formattedData', JSON.stringify(newFormattedData));
   }
 });
+
+const pegarDados = async () => {
+  try {
+    await registroRedzone.historicRegister();
+    data.value = registroRedzone.dados.filter(item => item.room === props.redzoneName)
+  } catch (error) {
+    console.log('Erro ao obter dados:', error);
+  }
+}
+
+onMounted(() => {
+  pegarDados();
+});
+
 </script>
 
 

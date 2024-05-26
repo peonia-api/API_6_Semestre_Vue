@@ -1,13 +1,14 @@
 <template>
-  <nav class="navbar">
+  <nav v-if="!loadingData" class="navbar">
     <div class="navbar-brand">
       <img src="./icons/Altave.png" alt="Logo" class="navbar-logo">
     </div>
     <ul class="nav-list">
       <li class="nav-item"><router-link to="/">PAINEL</router-link></li>
-      <li class="nav-item"><router-link to="/report">RELATÓRIOS</router-link></li>
-      <li class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
       <li class="nav-item"><router-link to="/perfil">PERFIL</router-link></li>
+      <li v-if="isAdmin" class="nav-item"><router-link to="/userList">USUÁRIO</router-link></li>
+      <li v-if="isAdmin || isManager" class="nav-item"><router-link to="/areaList">AREA</router-link></li>
+      <!-- <li v-if="isAdmin || isManager" class="nav-item"><router-link to="/redzoneList">REDZONE</router-link></li> -->
     </ul>
     <ul class="nav-list-button">
       <li class="nav-item">
@@ -21,18 +22,26 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { avisoLogout} from '../plugins/sweetalert';
+import { avisoLogout } from '../plugins/sweetalert';
 
 const router = useRouter();
+const currentUserJSON = localStorage.getItem('currentUser');
+const currentUser = currentUserJSON ? JSON.parse(currentUserJSON) : null;
+
+const isAdmin = currentUser && currentUser.permissionType === 'ROLE_ADMIN';
+const isManager = currentUser && currentUser.permissionType === 'ROLE_MANAGER';
+
 
 const logout = async () => {
   const result = await avisoLogout();
   if (result.isConfirmed) {
-  localStorage.removeItem('token');
-  router.push('/login');
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
+    router.push('/login');
   }
-}
+};
 </script>
+
 
 <style>
 .navbar {
@@ -44,13 +53,13 @@ const logout = async () => {
 }
 
 .navbar-brand {
-  margin-right: 20px; 
+  margin-right: 20px;
 }
 
 .navbar-logo {
   height: 20px;
   width: 125px;
-  margin-right: 80px; 
+  margin-right: 80px;
 }
 
 .nav-list {
@@ -60,6 +69,7 @@ const logout = async () => {
   display: flex;
   align-items: end;
 }
+
 .nav-list-button {
   list-style-type: none;
   margin: 0;
@@ -70,7 +80,7 @@ const logout = async () => {
 }
 
 .nav-item {
-  margin-right: 50px; 
+  margin-right: 50px;
 }
 
 .nav-item a {
@@ -87,17 +97,17 @@ const logout = async () => {
 }
 
 .button-logout {
-    width: 60px; 
-    height: 25px;
-    background-color: #02314b;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 10px; 
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    color: #fafafa;
+  width: 60px;
+  height: 25px;
+  background-color: #02314b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fafafa;
 }
 
 .button-logout p {
@@ -107,7 +117,15 @@ const logout = async () => {
   font-weight: 700;
   padding: 10px;
 }
+
 .button-logout:hover {
   background-color: #034163;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 </style>
