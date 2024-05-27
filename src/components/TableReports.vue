@@ -35,10 +35,8 @@ import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
 
-
 const registroRedzone = RegistroStore();
 const filteredRedzones = ref([]);
-
 const data = ref([]);
 const currentPage = ref(1);
 
@@ -48,13 +46,27 @@ const props = defineProps({
     default: 6
   },
   redzoneName: {
-    type: String
+    type: String,
+    required: true
   },
 });
 
+const pegarDados = async () => {
+  try {
+    await registroRedzone.historicRegister();
+    data.value = registroRedzone.dados;
+    filteredRedzones.value = data.value.filter(item => item.room === props.redzoneName);
+  } catch (error) {
+    console.log('Erro ao obter dados:', error);
+  }
+};
+
+onMounted(() => {
+  pegarDados();
+});
 
 const formattedData = computed(() => {
-  return data.value.map(item => ({
+  return filteredRedzones.value.map(item => ({
     ...item,
     formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
     formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
@@ -73,33 +85,19 @@ const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
-}
+};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
-}
+};
 
 watch(formattedData, (newFormattedData) => {
   if (newFormattedData.length > 0) {
     localStorage.setItem('formattedData', JSON.stringify(newFormattedData));
   }
 });
-
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados.filter(item => item.room === props.redzoneName)
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-}
-
-onMounted(() => {
-  pegarDados();
-});
-
 </script>
 
 
