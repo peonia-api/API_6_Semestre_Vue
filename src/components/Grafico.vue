@@ -19,21 +19,27 @@ onMounted(() => {
   pegarDados();
 });
 
+const props = defineProps({
+  redzoneName: {
+    type: String,
+    required: true
+  },
+});
+
 const pegarDados = async () => {
   try {
     await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados;
+    data.value = registroRedzone.dados.filter(item => item.room === props.redzoneName);
     
-    // Ordenando os dados pela data antes de criar o gráfico
     data.value.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-    
-    // Chamando a função para criar o gráfico com os dados atualizados
+    console.log(data.value);
+
     criarGrafico();
   } catch (error) {
     console.log('Erro ao obter dados:', error);
   }
 }
-
+console.log(props.redzoneName)
 const criarGrafico = () => {
   const dadosSomaPorDia = data.value.filter(item => item.occurrence === '1').reduce((acc, item) => {
     const dataFormatada = format(new Date(item.dateTime), 'dd/MM/yyyy');
