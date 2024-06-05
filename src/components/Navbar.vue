@@ -21,16 +21,19 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { avisoLogout } from '../plugins/sweetalert';
+import Button from 'primevue/button';
 
 const router = useRouter();
+const loadingData = ref(false);
+
 const currentUserJSON = localStorage.getItem('currentUser');
 const currentUser = currentUserJSON ? JSON.parse(currentUserJSON) : null;
 
 const isAdmin = currentUser && currentUser.permissionType === 'ROLE_ADMIN';
 const isManager = currentUser && currentUser.permissionType === 'ROLE_MANAGER';
-
 
 const logout = async () => {
   const result = await avisoLogout();
