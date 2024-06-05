@@ -136,13 +136,6 @@ const submitForm = async () => {
   text-align: center;
 }
 
-.email-error {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-}
-
 .error-input {
   border-color: red;
 }
