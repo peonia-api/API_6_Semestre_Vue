@@ -6,11 +6,14 @@
     <div class="Input-Texts">
       <div v-if="hasError && !emailError" class="error-message">{{ errorMessage }}</div>
       <div class="input-container">
-        <InputText type="text" v-model="userData.name" placeholder="Nome completo" />
+        <InputText type="text" v-model="userData.name" placeholder="Nome" />
       </div>
-      <!-- <div class="input-container">
+      <div class="input-container">
         <InputText type="text" v-model="userData.surname" placeholder="Sobrenome" />
-      </div> -->
+      </div>
+      <div class="input-container">
+        <InputText type="text" v-model="userData.function" placeholder="Função" />
+      </div>
       <div class="input-container">
         <select v-model="userData.permissionType">
           <option value="" disabled>Autorizações</option>
@@ -47,9 +50,9 @@ const { create } = UsuarioStore();
 
 const userData = ref({
   name: '',
-  surname: 'surname',
+  surname: '',
   email: '',
-  function: 'User',
+  function: '',
   permissionType: '',
   password: ''
 });
