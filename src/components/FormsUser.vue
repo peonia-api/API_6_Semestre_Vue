@@ -11,8 +11,9 @@
         <InputText type="text" v-model="currentUser.email" placeholder="E-mail" />
       </div>
     </div>
-    <div class="Register-Button">
+    <div class="Button-Container">
       <Button label="Atualizar" severity="contrast" @click="submitPutForm" />
+      <Button label="Trocar Senha" severity="contrast" @click="goToAut" />
     </div>
   </UserBox>
 </template>
@@ -25,8 +26,14 @@ import { onMounted, ref } from 'vue';
 import type { UsuarioPefil } from "../interfaces/User";
 import { avisoEditar } from '@/plugins/sweetalert';
 import UsuarioStore from '@/stores/Usuario';
+import { useRouter } from 'vue-router';
 
 const { putUser } = UsuarioStore();
+const router = useRouter();
+
+const goToAut = () => {
+  router.push({ name: 'autenticacao' });
+};
 
 const currentUser = ref<UsuarioPefil>({
   id: '',
@@ -38,18 +45,15 @@ const currentUser = ref<UsuarioPefil>({
 
 onMounted(async () => {
   const loadUserFromLocalStorage = () => {
-  const userStr = localStorage.getItem('currentUser');
-  if (userStr) {
-    const user = JSON.parse(userStr);
-    Object.assign(currentUser.value, user);
-  }
-};
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      Object.assign(currentUser.value, user);
+    }
+  };
 
-loadUserFromLocalStorage();
+  loadUserFromLocalStorage();
 });
-
-
-
 
 async function submitPutForm() {
   const result = await avisoEditar();
@@ -61,7 +65,6 @@ async function submitPutForm() {
     }
   }
 }
-
 </script>
 
 <style scoped>
@@ -91,5 +94,11 @@ async function submitPutForm() {
 
 .input-text {
   width: 80%;
+}
+
+.Button-Container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 </style>
