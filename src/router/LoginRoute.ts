@@ -1,12 +1,23 @@
 import LoginScreen from '../views/LoginScreen.vue';
+import AutenticacaoView from '../views/AutenticacaoView.vue';
+import NewPasswordView from '../views/NewPasswordView.vue';
 
-const LoginRoute = {
+export const LoginRoute = {
   path: '/login',
   name: 'loginScreenVue',
-  meta: {
-    title: 'login'
-  },
- component: LoginScreen
+  component: LoginScreen
 };
 
-export default LoginRoute
+export const AutRoute = {
+  path: '/autenticacao',
+  name: 'autenticacao',
+ component: AutenticacaoView
+};
+
+export const PasswordRoute = {
+  path: '/password',
+  name: 'password',
+ component: NewPasswordView
+};
+
+ 
