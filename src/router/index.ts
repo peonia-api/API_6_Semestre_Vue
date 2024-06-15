@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import {PainelRoute, PainelListRedzonesRoute } from './RegisterRoute';
 import { UserRoute, RegistrationRoute, PerfilRoute, EditUser } from "./UserRoute";
-import LoginRoute from "./LoginRoute";
+import { LoginRoute, AutRoute, PasswordRoute } from "./LoginRoute";
 import { useAuthStore } from "@/stores/Login";
 import { ListRedzoneRoute, RedzoneRegisterRoute, EditRedzoneRoute } from "./RedzoneRoute";
 import { AreaRoute, RegistrationAreaRoute, EditArea } from "./AreaRoute";
@@ -11,6 +11,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     LoginRoute,
+    AutRoute,
+    PasswordRoute,
     PainelRoute,
     UserRoute,
     RegistrationRoute,

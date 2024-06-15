@@ -7,7 +7,7 @@
       <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
     </div>
     <div>
-      <Grafico></Grafico>
+      <Grafico :redzoneName="redzoneName"></Grafico>
     </div>
     <div class="table-container">
       <TableReports :items-per-page="4" :redzoneName="redzoneName"></TableReports>
@@ -32,7 +32,7 @@ const exportToExcel = () => {
       'Ocorrência': item.occurrence === '0' ? 'saída' : 'entrada',
       'Data': item.formattedDate,
       'Hora': item.formattedTime,
-      'Sala': 'Laboratório'
+      'Sala': props.redzoneName
     })));
 
     const workbook = XLSX.utils.book_new();
