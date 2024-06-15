@@ -36,7 +36,6 @@ import Button from 'primevue/button';
 import useRegistroStore from '../stores/Registro';  // Certifique-se de que o caminho está correto
 import type { Register } from "../interfaces/RegisterRedzone";
 
-
 const registroRedzone = useRegistroStore();
 const data = ref<Register[]>([]);
 const currentPage = ref(1);
@@ -48,39 +47,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const registroRedzone = RegistroStore();
-const filteredRedzones = ref([]);
-const data = ref([]);
-const currentPage = ref(1);
-
-const props = defineProps({
-  itemsPerPage: {
-    type: Number,
-    default: 6
-  },
-  redzoneName: {
-    type: String,
-    required: true
-  },
-});
-
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados;
-    filteredRedzones.value = data.value.filter(item => item.room === props.redzoneName);
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-};
-
-onMounted(() => {
-  pegarDados();
-});
-
-
 const formattedData = computed(() => {
-  return filteredRedzones.value.map(item => ({
+  return data.value.map(item => ({
     ...item,
     formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
     formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
@@ -113,6 +81,31 @@ watch(formattedData, (newFormattedData) => {
   }
 });
 
+const pegarDados = async () => {
+  try {
+    await registroRedzone.historicRegister();
+    if (registroRedzone.dados.value) {
+      data.value = registroRedzone.dados.value.filter(item => item.room === props.redzoneName);
+    }
+  } catch (error) {
+    console.log('Erro ao obter dados:', error);
+  }
+};
+
+onMounted(() => {
+  pegarDados();
+  registroRedzone.connectWebSocket();
+});
+
+watch(
+  () => registroRedzone.dados,
+  (newDados) => {
+    if (newDados) {
+      data.value = newDados.filter(item => item.room === props.redzoneName);
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
