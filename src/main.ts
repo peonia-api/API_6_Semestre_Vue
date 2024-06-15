@@ -1,5 +1,4 @@
 import './assets/main.css';
-
 // Definir global como window
 (window as any).global = window;
 
@@ -18,3 +17,4 @@ app.use(router);
 app.use(PrimeVue);
 
 app.mount('#app');
+

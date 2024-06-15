@@ -4,6 +4,7 @@
   </div>
   <UserBox background_color="white_color">
     <div class="Input-Texts">
+      <div v-if="hasError" class="error-message">{{ errorMessage }}</div>
       <div class="input-container">
         <InputText type="text" v-model="userArea.name" placeholder="Nome" />
       </div>
@@ -36,6 +37,8 @@ import AreaStore from '../stores/Area.ts';
 const router = useRouter();
 const { create } = AreaStore();
 const registroUser = UsuarioStore();
+const hasError = ref(false);
+const errorMessage = ref('');
 
 const usersRole = ref([]);
 
@@ -56,7 +59,6 @@ onMounted(() => {
 const userArea = ref({
   name: '',
   description: '',
-  responsibleManager: 'Gerente Responsável',
   user: {
     id: ''
   }
@@ -64,12 +66,18 @@ const userArea = ref({
 
 const submitForm = async () => {
   try {
-    console.log(userArea.value);
+    hasError.value = false;
+    errorMessage.value = '';
+
+    if (!userArea.value.name || !userArea.value.description || !userArea.value.user.id) {
+      throw new Error('Todos os campos são obrigatórios');
+    }
+
     await create(userArea.value);
-  } catch (error) {
-    console.log(error);
-  } finally {
     router.push("/areaList");
+  } catch (error) {
+    hasError.value = true;
+    errorMessage.value = error.message;
   }
 };
 </script>
@@ -121,6 +129,20 @@ const submitForm = async () => {
     margin-bottom: 20px;
     font-size: 1rem;
     color: #334155
+}
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.error-input {
+  border-color: red;
+}
+
+.input-error {
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

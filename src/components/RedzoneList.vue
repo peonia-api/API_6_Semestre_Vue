@@ -1,13 +1,19 @@
 <template>
   <div class="collapsible-container">
     <details v-for="(redzone) in paginatedRedzones" :key="redzone.id">
-        <summary  class="collapsible-title" @click="navigateToPainel(redzone)">{{ redzone.name }}</summary>
+      <summary class="collapsible-title" @click="navigateToPainel(redzone)">
+        {{ redzone.name }}
+      </summary>
     </details>
   </div>
   <div class="pagination">
-    <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">ANTERIOR</button>
+    <button class="button-pagination" @click="prevPage" :disabled="currentPage === 1">
+      ANTERIOR
+    </button>
     <p class="page-number">{{ currentPage }}</p>
-    <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">PRÓXIMO</button>
+    <button class="button-pagination" @click="nextPage" :disabled="currentPage === totalPages">
+      PRÓXIMO
+    </button>
   </div>
 </template>
 
@@ -17,12 +23,13 @@ import { useRouter } from 'vue-router';
 import RedzoneStore from '../stores/Redzone';
 import type { Redzone } from '../interfaces/CreateNewRedzone';
 
-const idUser = JSON.parse(localStorage.getItem('currentUser') || '').id
-const funcao = JSON.parse(localStorage.getItem('currentUser') || '').permissionType
-const emailUser = JSON.parse(localStorage.getItem('currentUser') || '').email
+// Adicionei um valor padrão ao acessar localStorage
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+const idUser = currentUser.id || '';
+const funcao = currentUser.permissionType || '';
+const emailUser = currentUser.email || '';
 
 console.log(emailUser);
-
 
 const redzoneStore = RedzoneStore();
 const router = useRouter();
@@ -55,36 +62,36 @@ const nextPage = () => {
 const fetchRedzones = async () => {
   try {
     await redzoneStore.getAllRedzones();
-    if(funcao === 'ROLE_ADMIN'){
+    if (funcao === 'ROLE_ADMIN') {
       redzonesDados.value = redzoneStore.redzones;
+    } else {
+      redzonesDados.value = redzoneStore.redzones.filter(
+        (item) => item.responsibleGuard === emailUser || item.user.id === idUser
+      );
     }
-    else{
-      redzonesDados.value = redzoneStore.redzones.filter((item) => item.responsibleGuard === emailUser || item.user.id === idUser )
-    }
-    //redzonesDados.value = redzoneStore.redzones;
   } catch (error) {
     console.error('Erro ao buscar Redzones:', error);
     nextTick(() => {
-            window.location.reload()
-        });
+      window.location.reload();
+    });
   }
 };
 
 console.log(redzonesDados);
 
-
 const navigateToPainel = (redzone: Redzone) => {
   router.push({ name: 'painelView', params: { redzoneName: redzone.name } }).then(() => {
-        nextTick(() => {
-            window.location.reload()
-        });
-      });
+    nextTick(() => {
+      window.location.reload();
+    });
+  });
 };
 
 onMounted(() => {
   fetchRedzones();
 });
 </script>
+
 
 
 
