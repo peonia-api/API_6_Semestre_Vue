@@ -12,6 +12,7 @@
       <div class="table-column">
         <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
       </div>
+
       <div class="table-column">{{ item.formattedDate }}</div>
       <div class="table-column">{{ item.formattedTime }}</div>
       <div class="table-column">{{ item.room }}</div>
@@ -29,32 +30,28 @@
   </div>
 </template>
 
-<script setup>
-import { RegistroStore } from '../stores/index';
+<script setup lang="ts">
 import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
+import useRegistroStore from '../stores/Registro'; 
+import type { Register } from "../interfaces/RegisterRedzone";
 
-
-const registroRedzone = RegistroStore();
-const filteredRedzones = ref([]);
-
-const data = ref([]);
+const registroRedzone = useRegistroStore();
+const data = ref<Register[]>([]);
 const currentPage = ref(1);
 
-const props = defineProps({
-  itemsPerPage: {
-    type: Number,
-    default: 6
-  },
-  redzoneName: {
-    type: String
-  },
-});
+interface Props {
+  itemsPerPage: number;
+  redzoneName: string;
+}
 
+const props = defineProps<Props>();
 
 const formattedData = computed(() => {
-  return data.value.map(item => ({
+  console.log(data.value);
+  
+  return registroRedzone.dados.map(item => ({
     ...item,
     formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
     formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
@@ -73,13 +70,13 @@ const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
-}
+};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
-}
+};
 
 watch(formattedData, (newFormattedData) => {
   if (newFormattedData.length > 0) {
@@ -87,27 +84,23 @@ watch(formattedData, (newFormattedData) => {
   }
 });
 
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados.filter(item => item.room === props.redzoneName)
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-}
-
 onMounted(() => {
-  pegarDados();
+  registroRedzone.connectWebSocket();
 });
 
+watch(
+  () => registroRedzone.dados,
+
+  (newDados) => {
+    if (newDados) {
+      data.value = newDados.filter(item => item.room === props.redzoneName);
+    }
+  },
+  { deep: true }
+);
 </script>
 
-
-
-
-
-<style>
-
+<style scoped>
 .titulo-container {
   display: flex;
   justify-content: space-between;

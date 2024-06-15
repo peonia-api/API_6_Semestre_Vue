@@ -79,3 +79,19 @@ export async function avisoDeletar(): Promise<SweetAlertResult> {
     });
   }
   
+
+  export async function avisoErroPassword(message: string): Promise<SweetAlertResult> {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: message
+    });
+  }
+
+  export async function avisoPassword(message: string): Promise<SweetAlertResult> {
+    return Swal.fire({
+      icon: "success",
+      text: message,
+      showConfirmButton: false
+    });
+  }

@@ -3,8 +3,6 @@
         <div  v-for="(area) in displayedAreas" :key="area.id">
             <div   class="area-box" v-if="area.user.email === emailUser || funcao === 'ROLE_ADMIN'" >
                 <div   @click="navigateToRedZones(area)" class="area-info">
-                <!-- Alteração aqui: passando o objeto 'area' inteiro ao invés de 'area.id' -->
-
                     <div class="area-title" >{{ area.name }}</div>
                     <div class="area-redzones">
                         <div v-for="redZone in area.redZones" :key="redZone.id">{{ redZone.name }}</div>
