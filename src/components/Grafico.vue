@@ -1,77 +1,68 @@
 <template>
   <div class="chart-container">
-    <canvas ref="chart"></canvas>
+    <canvas ref="chartRef"></canvas>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { Chart } from 'chart.js/auto';
-import { RegistroStore } from '../stores/index';
+import { onMounted, ref, watchEffect, nextTick } from 'vue';
+import { Chart, registerables } from 'chart.js';
+import useRegistroStore from '@/stores/Registro';
 import { format } from 'date-fns';
 
-const registroRedzone = RegistroStore();
+Chart.register(...registerables);
 
-const data = ref([]);
-const chart = ref(null);
+const registroRedzone = useRegistroStore();
+const chartRef = ref(null);
 
-onMounted(() => {
-  pegarDados();
+const initChart = () => {
+  const ctx = chartRef.value.getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Total de Entradas por Dia', backgroundColor: '#f87979', data: [] }] },
+    options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } } } }
+  });
+  return chart;
+};
+
+let chartInstance = null;
+
+onMounted(async () => {
+  await registroRedzone.historicRegister();
+  registroRedzone.connectWebSocket();
+  nextTick(() => {
+    chartInstance = initChart();
+    updateGraphData(registroRedzone.dados); // Initial data update
+  });
 });
 
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    data.value = registroRedzone.dados;
-    
-    // Ordenando os dados pela data antes de criar o gráfico
-    data.value.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-    
-    // Chamando a função para criar o gráfico com os dados atualizados
-    criarGrafico();
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
+watchEffect(() => {
+  const newData = registroRedzone.dados;
+  if (chartInstance && newData) {
+    updateGraphData(newData);
   }
-}
+});
 
-const criarGrafico = () => {
-  const dadosSomaPorDia = data.value.filter(item => item.occurrence === '1').reduce((acc, item) => {
-    const dataFormatada = format(new Date(item.dateTime), 'dd/MM/yyyy');
-    acc[dataFormatada] = acc[dataFormatada] ? acc[dataFormatada] + 1 : 1;
+const updateGraphData = (data) => {
+  if (data) {
+    const groupedData = groupDataByDate(data);
+    chartInstance.data.labels = Object.keys(groupedData);
+    chartInstance.data.datasets[0].data = Object.values(groupedData);
+    chartInstance.update();
+  }
+};
+
+const groupDataByDate = (data) => {
+  return data.reduce((acc, item) => {
+    // Verifica se a ocorrência é uma saída, ajuste 'item.occurrence === '0'' conforme seus dados
+    if (item.occurrence === '1') { 
+      const date = format(new Date(item.dateTime), 'dd/MM/yyyy');
+      acc[date] = (acc[date] || 0) + 1;
+    }
     return acc;
   }, {});
+};
 
-  const labels = Object.keys(dadosSomaPorDia);
-  const dataValues = Object.values(dadosSomaPorDia);
-
-  const datacollection = ref({
-    labels: labels,
-    datasets: [
-      {
-        label: 'Total de Entradas por Dia',
-        backgroundColor: '#f87979',
-        data: dataValues,
-      },
-    ],
-  });
-
-  const ctx = chart.value.getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: datacollection.value,
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,
-            precision: 0
-          }
-        }
-      }
-    }
-  });
-}
 </script>
 
 <style>

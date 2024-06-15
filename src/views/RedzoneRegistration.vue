@@ -127,7 +127,7 @@ const submitForm = async () => {
 
   try {
     await create(redzoneData.value);
-    router.push("/redzoneList");
+    router.push("/");
   } catch (error) {
     console.error('Erro ao criar Redzone:', error);
   }
