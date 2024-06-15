@@ -34,7 +34,7 @@
 import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
-import useRegistroStore from '../stores/Registro';  // Certifique-se de que o caminho está correto
+import useRegistroStore from '../stores/Registro'; 
 import type { Register } from "../interfaces/RegisterRedzone";
 
 const registroRedzone = useRegistroStore();
@@ -49,7 +49,9 @@ interface Props {
 const props = defineProps<Props>();
 
 const formattedData = computed(() => {
-  return data.value.map(item => ({
+  console.log(data.value);
+  
+  return registroRedzone.dados.map(item => ({
     ...item,
     formattedDate: format(new Date(item.dateTime), 'dd/MM/yyyy'),
     formattedTime: format(new Date(item.dateTime).setHours(new Date(item.dateTime).getHours() + 3), 'HH:mm')
@@ -82,24 +84,13 @@ watch(formattedData, (newFormattedData) => {
   }
 });
 
-const pegarDados = async () => {
-  try {
-    await registroRedzone.historicRegister();
-    if (registroRedzone.dados.value) {
-      data.value = registroRedzone.dados.value.filter(item => item.room === props.redzoneName);
-    }
-  } catch (error) {
-    console.log('Erro ao obter dados:', error);
-  }
-};
-
 onMounted(() => {
-  pegarDados();
   registroRedzone.connectWebSocket();
 });
 
 watch(
   () => registroRedzone.dados,
+
   (newDados) => {
     if (newDados) {
       data.value = newDados.filter(item => item.room === props.redzoneName);
@@ -110,7 +101,6 @@ watch(
 </script>
 
 <style scoped>
-/* Seus estilos aqui */
 .titulo-container {
   display: flex;
   justify-content: space-between;
