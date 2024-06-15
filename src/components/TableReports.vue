@@ -12,6 +12,7 @@
       <div class="table-column">
         <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
       </div>
+
       <div class="table-column">{{ item.formattedDate }}</div>
       <div class="table-column">{{ item.formattedTime }}</div>
       <div class="table-column">{{ item.room }}</div>
