@@ -13,23 +13,23 @@
       <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
     </div>
     <div class="filter-and-chart-container">
-      <div class="filter-container">
-        <p class="filter-title">Filtro</p>
-        <div class="date-filters">
-          <div class="date-filter">
-            <label>De</label>
-            <input type="date" v-model="state.inicialDate">
-          </div>
-          <div class="date-filter">
-            <label>Até</label>
-            <input type="date" v-model="state.endDate">
-          </div>
-        </div>
-        <div class="submit-filter">
-          <Button label="Buscar" @click="getFilteredRegister" class="submit-button"/>
-        </div>
-      </div>
       <div class="chart-container">
+        <div class="filter-container">
+          <div class="filter-title">Filtro</div>
+          <div class="date-filters">
+            <div class="filter-group">
+              <label>De</label>
+              <input type="date" v-model="state.inicialDate">
+            </div>
+            <div class="filter-group">
+              <label>Até</label>
+              <input type="date" v-model="state.endDate">
+            </div>
+            <div class="submit-filter">
+              <Button label="Buscar" @click="getFilteredRegister" class="submit-button"/>
+            </div>
+          </div>
+        </div>
         <Grafico></Grafico>
       </div>
     </div>
@@ -122,7 +122,7 @@ const getFilteredRegister = () => {
 <style>
 .painel-container {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-top: 15px;
@@ -134,83 +134,16 @@ const getFilteredRegister = () => {
 }
 
 .filter-and-chart-container {
-  display: flex;
-  align-items: flex-start;
   width: 100%;
-}
-
-.table-container {
-  background-color: #f3f3f3;
-  border-radius: 15px;
-  align-items: center;
-  width: 90%;
-}
-
-.title-ocorrencias {
-  font-size: 27px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.title-ocorrencias p {
-  margin-bottom: 10px;
-  border-bottom: 2px solid #ccc;
-}
-
-.filter-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-right: 20px;
-}
-
-.filter-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  margin-left: 80px;
-}
-
-.date-filters {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  margin-bottom: 10px;
-}
-
-.date-filter {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-right: 10px;
-}
-
-.date-filter label {
-  margin-bottom: 5px;
-}
-
-.submit-filter {
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-.submit-button {
-  background-color: black;
-  color: white;
-  padding: 5px 10px; 
-  font-size: 14px; 
-  margin-left: 80px; 
+  margin-top: -80px;
 }
 
 .chart-container {
-  flex-grow: 1;
-}
-</style>
-
-<style>
-.chart-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -220,23 +153,66 @@ const getFilteredRegister = () => {
   height: 400px;
 }
 
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: white;
+  padding: 4px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  margin-top: -5px;
+  align-items:center;
+}
+
+.filter-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.date-filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.filter-group label {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.filter-group input {
+  font-size: 14px;
+}
+
+.submit-filter {
+  display: flex;
+  flex-grow: 1; 
+  justify-content: flex-end;  
+}
+
+.submit-button {
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
 .current-count {
   padding: 10px;
   background-color: #e1e1e1;
   border-radius: 5px;
   margin-bottom: 20px;
-}
-
-.painel-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 15px;
-  background-color: #f3f3f3;
-  border-radius: 15px;
-  width: 75%;
-  margin-bottom: 150px;
 }
 
 .table-container {
