@@ -29,7 +29,6 @@ let chartInstance = null;
 
 onMounted(async () => {
   await registroRedzone.historicRegister();
-  registroRedzone.connectWebSocket();
   nextTick(() => {
     chartInstance = initChart();
     updateGraphData(registroRedzone.dados); // Initial data update
@@ -54,15 +53,13 @@ const updateGraphData = (data) => {
 
 const groupDataByDate = (data) => {
   return data.reduce((acc, item) => {
-    // Verifica se a ocorrência é uma saída, ajuste 'item.occurrence === '0'' conforme seus dados
-    if (item.occurrence === '1') { 
+    if (item.occurrence === '1') {
       const date = format(new Date(item.dateTime), 'dd/MM/yyyy');
       acc[date] = (acc[date] || 0) + 1;
     }
     return acc;
   }, {});
 };
-
 </script>
 
 <style>
