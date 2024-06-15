@@ -4,13 +4,16 @@
   </div>
   <div class="painel-container">
     <div class="current-count">
-      <h3>Pessoas Atuais na Redzone: {{ currentCount }}</h3>
+      <h3>Pessoas atuais na Redzone: {{ currentCount }}</h3>
+    </div>
+    <div v-if="alertMessage" class="alert-message">
+      {{ alertMessage }}
     </div>
     <div class="export-dropdown">
       <img src="@/assets/icons/Export_Icon.png" alt="Exportar Tabela para Excel" @click="exportToExcel" class="export-icon">
     </div>
     <div>
-      <Grafico :redzoneName="redzoneName"></Grafico>
+      <Grafico></Grafico>
     </div>
     <div class="table-container">
       <TableReports :items-per-page="4" :redzoneName="redzoneName"></TableReports>
@@ -19,31 +22,63 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, computed } from 'vue';
+import { defineProps, onMounted, ref, computed, watch } from 'vue';
 import Grafico from '../components/Grafico.vue';
 import TableReports from '../components/TableReports.vue';
 import useRegistroStore from '@/stores/Registro';
+import useRedzoneStore from '@/stores/Redzone';
 import * as XLSX from 'xlsx';
 
 const props = defineProps<{ redzoneName: string }>();
 const registroRedzone = useRegistroStore();
-
-onMounted(() => {
-  registroRedzone.historicRegister();
-  registroRedzone.connectWebSocket();
-});
+const redzoneStore = useRedzoneStore();
 
 const currentCount = computed(() => registroRedzone.currentCount);
+const alertMessage = ref('');
+
+const checkPersonLimit = (newCount: number) => {
+  const redzone = redzoneStore.redzones.find((rz) => rz.name === props.redzoneName);
+  if (redzone) {
+    console.log(`Redzone: ${redzone.name}, Limite: ${redzone.personLimit}, Contagem Atual: ${newCount}`);
+    if (newCount > redzone.personLimit) {
+      alertMessage.value = "Limite de pessoas ultrapassado";
+    } else {
+      alertMessage.value = '';
+    }
+  } else {
+    console.log(`Redzone with name ${props.redzoneName} not found.`);
+  }
+};
+
+onMounted(() => {
+  redzoneStore.getAllRedzones(); // Garantir que estamos buscando todas as redzones
+  registroRedzone.historicRegister();
+  registroRedzone.connectWebSocket();
+
+  watch(
+    () => registroRedzone.currentCount,
+    (newCount) => {
+      checkPersonLimit(newCount);
+    }
+  );
+
+  watch(
+    () => redzoneStore.redzones,
+    () => {
+      checkPersonLimit(currentCount.value); // Re-check limit when redzones are updated
+    }
+  );
+});
 
 const exportToExcel = () => {
   const formattedData = JSON.parse(localStorage.getItem('formattedData') || '');
 
   if (formattedData) {
-    const worksheet = XLSX.utils.json_to_sheet(formattedData.map((item: { occurrence: string; formattedDate: any; formattedTime: any; }): any => ({
+    const worksheet = XLSX.utils.json_to_sheet(formattedData.map((item: { occurrence: string; formattedDate: any; formattedTime: any; room: string }): any => ({
       'Ocorrência': item.occurrence === '0' ? 'saída' : 'entrada',
       'Data': item.formattedDate,
       'Hora': item.formattedTime,
-      'Sala': props.redzoneName
+      'Sala': item.room
     })));
 
     const workbook = XLSX.utils.book_new();
@@ -59,12 +94,12 @@ const exportToExcel = () => {
 .chart-container {
   display: flex;
   align-items: center;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .chart-container canvas {
   width: 500px;
-  height: 400px; 
+  height: 400px;
 }
 
 .current-count {
@@ -105,6 +140,14 @@ const exportToExcel = () => {
 }
 
 .export-dropdown {
+  margin-bottom: 20px;
+}
+
+.alert-message {
+  padding: 10px;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
   margin-bottom: 20px;
 }
 </style>
