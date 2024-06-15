@@ -2,7 +2,7 @@ interface Registro {
     id: number,
     occurrence: string,
     dateTime: string,
-    room: number,
+    room: string,
     count: number
 }
 
