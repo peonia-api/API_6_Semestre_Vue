@@ -5,11 +5,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watchEffect, nextTick } from 'vue';
+import { onMounted, ref, watchEffect, nextTick, onBeforeUnmount } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import useRegistroStore from '@/stores/Registro';
-import { ref, onBeforeUnmount } from 'vue';
-import { Chart } from 'chart.js/auto';
 import { RegistroStore } from '../stores/index';
 import { format } from 'date-fns';
 
@@ -116,7 +114,7 @@ const criarGrafico = () => {
 
 // Adicionando um listener para o evento de atualização de dados
 
-  pegarDados();
+
 
   registroRedzone.emitter.on('data-updated', (updatedData) => {
     data.value = updatedData;

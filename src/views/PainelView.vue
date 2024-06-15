@@ -40,16 +40,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, onMounted, ref, computed, watch } from 'vue';
+import { defineProps, ref, onMounted, computed, watch } from 'vue';
 import Grafico from '../components/Grafico.vue';
 import TableReports from '../components/TableReports.vue';
-import useRegistroStore from '@/stores/Registro';
-import useRedzoneStore from '@/stores/Redzone';
+import useRegistroStore from '../stores/Registro';
 import * as XLSX from 'xlsx';
+import useRedzoneStore from '../stores/Redzone';
 
 import Button from 'primevue/button';
-import useRegistroStore from '../stores/Registro';
 const registro = useRegistroStore();
+const redzoneStore = useRedzoneStore();
 
 const props = defineProps<{ redzoneName: string }>();
 
@@ -57,13 +57,12 @@ const state = ref({inicialDate: "", endDate: ""});
 console.log(props.redzoneName);
 
 const registroRedzone = useRegistroStore();
-const redzoneStore = useRedzoneStore();
 
 const currentCount = computed(() => registroRedzone.currentCount);
 const alertMessage = ref('');
 
 const checkPersonLimit = (newCount: number) => {
-  const redzone = redzoneStore.redzones.find((rz) => rz.name === props.redzoneName);
+  const redzone =  redzoneStore.redzones.find((rz) => rz.name === props.redzoneName);
   if (redzone) {
     console.log(`Redzone: ${redzone.name}, Limite: ${redzone.personLimit}, Contagem Atual: ${newCount}`);
     if (newCount > redzone.personLimit) {
