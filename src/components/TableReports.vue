@@ -10,7 +10,7 @@
     </div>
     <div v-for="(item, index) in displayedData" :key="index" class="table-row">
       <div class="table-column">
-        <i :class="item.occurrence === '1' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
+        <i :class="item.occurrence === 'ENTRANCE' ? 'pi pi-arrow-right' : 'pi pi-arrow-left'"></i>
       </div>
       <div class="table-column">{{ item.formattedDate }}</div>
       <div class="table-column">{{ item.formattedTime }}</div>
@@ -29,11 +29,24 @@
   </div>
 </template>
 
-<script setup>
-import { RegistroStore } from '../stores/index';
+<script setup lang="ts">
 import { onMounted, ref, computed, watch } from 'vue';
 import { format } from 'date-fns';
 import Button from 'primevue/button';
+import useRegistroStore from '../stores/Registro';  // Certifique-se de que o caminho está correto
+import type { Register } from "../interfaces/RegisterRedzone";
+
+
+const registroRedzone = useRegistroStore();
+const data = ref<Register[]>([]);
+const currentPage = ref(1);
+
+interface Props {
+  itemsPerPage: number;
+  redzoneName: string;
+}
+
+const props = defineProps<Props>();
 
 const registroRedzone = RegistroStore();
 const filteredRedzones = ref([]);
@@ -64,6 +77,7 @@ const pegarDados = async () => {
 onMounted(() => {
   pegarDados();
 });
+
 
 const formattedData = computed(() => {
   return filteredRedzones.value.map(item => ({
@@ -98,14 +112,11 @@ watch(formattedData, (newFormattedData) => {
     localStorage.setItem('formattedData', JSON.stringify(newFormattedData));
   }
 });
+
 </script>
 
-
-
-
-
-<style>
-
+<style scoped>
+/* Seus estilos aqui */
 .titulo-container {
   display: flex;
   justify-content: space-between;
