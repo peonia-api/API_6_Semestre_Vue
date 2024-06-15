@@ -5,44 +5,48 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { Chart } from 'chart.js/auto';
 import { RegistroStore } from '../stores/index';
 import { format } from 'date-fns';
 
 const registroRedzone = RegistroStore();
-
 const data = ref([]);
 const chart = ref(null);
-
-onMounted(() => {
-  pegarDados();
-});
+let chartInstance = null;
 
 const pegarDados = async () => {
   try {
     await registroRedzone.historicRegister();
     data.value = registroRedzone.dados;
-    
-    // Ordenando os dados pela data antes de criar o gráfico
     data.value.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-    
-    // Chamando a função para criar o gráfico com os dados atualizados
     criarGrafico();
   } catch (error) {
     console.log('Erro ao obter dados:', error);
   }
-}
+};
 
 const criarGrafico = () => {
-  const dadosSomaPorDia = data.value.filter(item => item.occurrence === '1').reduce((acc, item) => {
-    const dataFormatada = format(new Date(item.dateTime), 'dd/MM/yyyy');
-    acc[dataFormatada] = acc[dataFormatada] ? acc[dataFormatada] + 1 : 1;
-    return acc;
-  }, {});
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
 
-  const labels = Object.keys(dadosSomaPorDia);
-  const dataValues = Object.values(dadosSomaPorDia);
+  const dadosSomaPorDia = data.value
+    .filter(item => item.occurrence === '1')
+    .reduce((acc, item) => {
+      const dataFormatada = format(new Date(item.dateTime), 'dd/MM/yyyy');
+      acc[dataFormatada] = acc[dataFormatada] ? acc[dataFormatada] + 1 : 1;
+      return acc;
+    }, {});
+
+  // Ordenando as chaves das datas
+  const labels = Object.keys(dadosSomaPorDia).sort((a, b) => {
+    const [dayA, monthA, yearA] = a.split('/').map(Number);
+    const [dayB, monthB, yearB] = b.split('/').map(Number);
+    return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+  });
+
+  const dataValues = labels.map(label => dadosSomaPorDia[label]);
 
   const datacollection = ref({
     labels: labels,
@@ -56,7 +60,7 @@ const criarGrafico = () => {
   });
 
   const ctx = chart.value.getContext('2d');
-  new Chart(ctx, {
+  chartInstance = new Chart(ctx, {
     type: 'line',
     data: datacollection.value,
     options: {
@@ -71,7 +75,23 @@ const criarGrafico = () => {
       }
     }
   });
-}
+};
+
+// Adicionando um listener para o evento de atualização de dados
+
+  pegarDados();
+
+  registroRedzone.emitter.on('data-updated', (updatedData) => {
+    data.value = updatedData;
+    criarGrafico();
+  });
+
+
+onBeforeUnmount(() => {
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+});
 </script>
 
 <style>
